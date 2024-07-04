@@ -33,6 +33,14 @@
 }
 ```
 
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+
 <br>
 
 ## 2. 대기열 토큰 조회
@@ -54,6 +62,14 @@
   "tokenId": 1,
   "createdAt": "2024-07-04T10:00:00",
   "expiredAt": "2024-07-04T10:10:00"
+}
+```
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
 }
 ```
 
@@ -83,6 +99,14 @@
   "joinAt": "2024-07-04T10:00:00",
   "status": "WAITING",
   "remainingWaitListCount": 10
+}
+```
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
 }
 ```
 
@@ -119,6 +143,26 @@
       "reservationAt": "2024-07-24T10:00:00"
     }
   ]
+}
+```
+
+### Error
+```json
+{
+  "code": 401,
+  "message": "invalid token"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "concert not found"
 }
 ```
 
@@ -159,6 +203,32 @@
       "seatPrice": 10000
     }
   ]
+}
+```
+
+### Error
+```json
+{
+  "code": 401,
+  "message": "invalid token"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "concert not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "schedule not found"
 }
 ```
 
@@ -213,6 +283,44 @@
 }
 ```
 
+### Error
+```json
+{
+  "code": 401,
+  "message": "invalid token"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "concert not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "schedule not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "seat not found"
+}
+```
+```json
+{
+  "code": 400,
+  "message": "reservation failed"
+}
+```
+
 <br>
 
 ## 7. 결제 실행
@@ -248,6 +356,38 @@
 }
 ```
 
+### Error
+```json
+{
+  "code": 401,
+  "message": "invalid token"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+```json
+{
+  "code": 404,
+  "message": "reservation not found"
+}
+```
+```json
+{
+  "code": 400,
+  "message": "not enough balance"
+}
+```
+```json
+{
+  "code": 500,
+  "message": "payment failed"
+}
+```
+
 <br>
 
 ## 8. 잔액 충전
@@ -280,6 +420,27 @@
 }
 ```
 
+### Error
+
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+```json
+{
+  "code": 400,
+  "message": "invalid recharge amount"
+}
+```
+```json
+{
+  "code": 500,
+  "message": "recharge failed"
+}
+```
+
 ## 9. 잔액 조회
 
 ### Description
@@ -297,5 +458,14 @@
 {
   "userId": 1,
   "currentAmount": 40000
+}
+```
+
+### Error
+
+```json
+{
+  "code": 404,
+  "message": "user not found"
 }
 ```
