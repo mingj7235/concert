@@ -6,8 +6,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class WebConfig : WebMvcConfigurer {
+class WebConfig(
+    private val tokenInterceptor: TokenInterceptor,
+) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(TokenInterceptor()).addPathPatterns("/**")
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/**")
     }
 }

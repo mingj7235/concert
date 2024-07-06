@@ -4,7 +4,6 @@ erDiagram
     User ||--o{ Reservation : makes
     User ||--o{ Payment : makes
     User ||--|| Balance : has
-    User ||--o{ QueueToken : has
     User ||--o{ Queue : joins
     Concert ||--|{ ConcertSchedule : has
     Concert ||--|{ Seat : has
@@ -55,16 +54,10 @@ erDiagram
         datetime last_updated_at
     }
 
-    QueueToken {
-        bigint id PK
-        bigint user_id FK
-        datetime created_at
-    }
-
     Queue {
         bigint id PK
         bigint user_id FK
-        bigint token_id FK
+        string token
         datetime joined_at
         string status
     }

@@ -1,5 +1,6 @@
 package com.hhplus.concert.common.interceptor
 
+import com.hhplus.concert.application.manager.QueueManager
 import com.hhplus.concert.common.annotation.TokenRequired
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -11,7 +12,9 @@ import org.springframework.web.servlet.HandlerInterceptor
  * TODO : token manager 를 DI 받아 token 을 검증하도록 한다.
  */
 @Component
-class TokenInterceptor : HandlerInterceptor {
+class TokenInterceptor(
+    private val queueManager: QueueManager,
+) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,

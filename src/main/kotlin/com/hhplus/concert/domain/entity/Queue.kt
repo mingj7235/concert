@@ -14,6 +14,7 @@ import java.time.LocalDateTime
 @Entity
 class Queue(
     user: User,
+    token: String,
     joinedAt: LocalDateTime,
     queueStatus: String,
 ) {
@@ -24,6 +25,10 @@ class Queue(
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var user: User = user
+        protected set
+
+    @Column(name = "token", nullable = false)
+    var token: String = token
         protected set
 
     @Column(name = "joined_at", nullable = false)
