@@ -1,7 +1,7 @@
 package com.hhplus.concert.common.interceptor
 
-import com.hhplus.concert.application.manager.QueueManager
 import com.hhplus.concert.common.annotation.TokenRequired
+import com.hhplus.concert.common.util.JwtUtil
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor
  */
 @Component
 class TokenInterceptor(
-    private val queueManager: QueueManager,
+    private val jwtUtil: JwtUtil,
 ) : HandlerInterceptor {
     override fun preHandle(
         request: HttpServletRequest,
@@ -29,19 +29,18 @@ class TokenInterceptor(
                 return true
             }
 
-            val tokenId = request.getHeader("TOKEN-ID")
-            if (tokenId == null) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "TOKEN-ID is missing")
+            val token = request.getHeader("QUEUE-TOKEN")
+            if (token == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "QUEUE-TOKEN is missing")
                 return false
             }
 
-            if (!isValidToken(tokenId)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid TOKEN-ID")
+            if (!isValidToken(token)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid QUEUE-TOKEN")
                 return false
             }
 
-            // 로직을 완성한 후에는, 어노테이션과 resolver 를 추가하고, userId 를 꺼내서 컨트롤 할 수 있게끔 인터셉터를 변경한다.
-            request.setAttribute("validatedTokenId", tokenId)
+            request.setAttribute("validatedToken", token)
         }
         return true
     }
@@ -50,8 +49,5 @@ class TokenInterceptor(
      * 토큰을 검증하는 로직을 넣는다.
      * 일단은 true 를 리턴한다.
      */
-    private fun isValidToken(tokenId: String): Boolean {
-        // 토큰 유효성 검사 로직 구현
-        return true // 임시 구현
-    }
+    private fun isValidToken(token: String): Boolean = jwtUtil.validateToken(token)
 }
