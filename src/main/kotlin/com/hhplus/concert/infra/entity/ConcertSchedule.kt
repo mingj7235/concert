@@ -1,4 +1,4 @@
-package com.hhplus.concert.domain.entity
+package com.hhplus.concert.infra.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
