@@ -1,11 +1,8 @@
-package com.hhplus.concert.domain.entity
+package com.hhplus.concert.infra.entity
 
-import com.hhplus.concert.common.type.PaymentStatus
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -15,12 +12,10 @@ import jakarta.persistence.ManyToOne
 import java.time.LocalDateTime
 
 @Entity
-class Payment(
+class Balance(
     user: User,
-    reservation: Reservation,
     amount: Long,
-    executedAt: LocalDateTime,
-    paymentStatus: PaymentStatus,
+    lastUpdatedAt: LocalDateTime,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,21 +26,11 @@ class Payment(
     var user: User = user
         protected set
 
-    @ManyToOne
-    @JoinColumn(name = "reservation_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    var reservation: Reservation = reservation
-        protected set
-
     @Column(name = "amount", nullable = false)
     var amount: Long = amount
         protected set
 
-    @Column(name = "executed_at", nullable = false)
-    var executedAt: LocalDateTime = executedAt
-        protected set
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    var paymentStatus: PaymentStatus = paymentStatus
+    @Column(name = "last_update_at", nullable = false)
+    var lastUpdatedAt: LocalDateTime = lastUpdatedAt
         protected set
 }

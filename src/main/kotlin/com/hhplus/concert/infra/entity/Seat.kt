@@ -1,4 +1,4 @@
-package com.hhplus.concert.domain.entity
+package com.hhplus.concert.infra.entity
 
 import com.hhplus.concert.common.type.SeatStatus
 import jakarta.persistence.Column

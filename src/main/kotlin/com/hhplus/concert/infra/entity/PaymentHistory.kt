@@ -1,23 +1,23 @@
-package com.hhplus.concert.domain.entity
+package com.hhplus.concert.infra.entity
 
-import com.hhplus.concert.common.type.ReservationStatus
+import com.hhplus.concert.common.type.PaymentStatus
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import java.time.LocalDateTime
 
 @Entity
-class Reservation(
+class PaymentHistory(
     user: User,
-    seat: Seat,
-    reservationStatus: ReservationStatus,
+    amount: Long,
+    createdAt: LocalDateTime,
+    paymentStatus: PaymentStatus,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,13 +28,15 @@ class Reservation(
     var user: User = user
         protected set
 
-    @ManyToOne
-    @JoinColumn(name = "seat_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    var seat: Seat = seat
+    @Column(name = "amount", nullable = false)
+    var amount: Long = amount
+        protected set
+
+    @Column(name = "create_at", nullable = false)
+    var createdAt: LocalDateTime = createdAt
         protected set
 
     @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    var reservationStatus: ReservationStatus = reservationStatus
+    var paymentStatus: PaymentStatus = paymentStatus
         protected set
 }

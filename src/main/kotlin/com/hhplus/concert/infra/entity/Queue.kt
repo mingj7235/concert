@@ -1,6 +1,6 @@
-package com.hhplus.concert.domain.entity
+package com.hhplus.concert.infra.entity
 
-import com.hhplus.concert.common.type.PaymentStatus
+import com.hhplus.concert.common.type.QueueStatus
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
@@ -13,11 +13,11 @@ import jakarta.persistence.ManyToOne
 import java.time.LocalDateTime
 
 @Entity
-class PaymentHistory(
+class Queue(
     user: User,
-    amount: Long,
-    createdAt: LocalDateTime,
-    paymentStatus: PaymentStatus,
+    token: String,
+    joinedAt: LocalDateTime,
+    queueStatus: QueueStatus,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,15 +28,19 @@ class PaymentHistory(
     var user: User = user
         protected set
 
-    @Column(name = "amount", nullable = false)
-    var amount: Long = amount
+    @Column(name = "token", nullable = false)
+    var token: String = token
         protected set
 
-    @Column(name = "create_at", nullable = false)
-    var createdAt: LocalDateTime = createdAt
+    @Column(name = "joined_at", nullable = false)
+    var joinedAt: LocalDateTime = joinedAt
         protected set
 
     @Column(name = "status", nullable = false)
-    var paymentStatus: PaymentStatus = paymentStatus
+    var queueStatus: QueueStatus = queueStatus
         protected set
+
+    fun updateStatus(queueStatus: QueueStatus) {
+        this.queueStatus = queueStatus
+    }
 }
