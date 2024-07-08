@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+    jpa:
+      hibernate:
+        ddl-auto: create-drop
+      database-platform: org.hibernate.dialect.H2Dialect
+
+jwt:
+  secret: concert_jwt_secret
+  expiration-days: 1
