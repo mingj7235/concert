@@ -14,7 +14,7 @@ class QueueManager(
     private val queueRepository: QueueRepository,
     private val jwtUtil: JwtUtil,
 ) {
-    // userId 로 현재 queue 상태가 waiting 인 것이 있는지 찾는다.
+    // userId 와 queueStatus 로 queue 를 찾는다.
     fun findByUserIdAndStatus(
         userId: Long,
         queueStatus: QueueStatus,
@@ -53,6 +53,7 @@ class QueueManager(
         queueIds: List<Long>,
         queueStatus: QueueStatus,
     ) {
+        if (queueIds.isEmpty()) throw QueueException.InvalidRequest()
         queueRepository.updateStatusForIds(queueIds, queueStatus)
     }
 

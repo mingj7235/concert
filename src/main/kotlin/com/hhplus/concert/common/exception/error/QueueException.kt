@@ -4,4 +4,6 @@ open class QueueException(
     errorMessage: String,
 ) : RuntimeException(errorMessage) {
     class QueueNotFound : QueueException("Queue not found")
+
+    class InvalidRequest : QueueException("Invalid request")
 }

@@ -29,4 +29,8 @@ interface QueueRepository {
         queueIds: List<Long>,
         queueStatus: QueueStatus,
     )
+
+    fun deleteAll()
+
+    fun findAll(): List<Queue>
 }

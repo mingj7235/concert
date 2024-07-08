@@ -43,4 +43,10 @@ class QueueRepositoryImpl(
     ) {
         queueJpaRepository.updateStatusForIds(queueIds, queueStatus)
     }
+
+    override fun deleteAll() {
+        queueJpaRepository.deleteAll()
+    }
+
+    override fun findAll(): List<Queue> = queueJpaRepository.findAll()
 }

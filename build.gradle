@@ -52,3 +52,7 @@ kotlin {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+test {
+    jvmArgs '-XX:+EnableDynamicAgentLoading'
+}
