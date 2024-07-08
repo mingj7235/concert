@@ -4,14 +4,12 @@ import com.hhplus.concert.application.dto.QueueServiceDto
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.domain.manager.queue.QueueManager
 import com.hhplus.concert.domain.manager.user.UserManager
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Service
 class QueueService(
-    @Value("\${queue.allowed-max-size}") private val allowedMaxSize: Int,
     private val queueManager: QueueManager,
     private val userManager: UserManager,
 ) {
@@ -68,7 +66,7 @@ class QueueService(
      */
     @Transactional
     fun maintainProcessingCount() {
-        val neededToUpdateCount = allowedMaxSize - queueManager.countByQueueStatus(QueueStatus.PROCESSING)
+        val neededToUpdateCount = ALLOWED_MAX_SIZE - queueManager.countByQueueStatus(QueueStatus.PROCESSING)
 
         if (neededToUpdateCount > 0) {
             queueManager.updateStatus(
@@ -80,5 +78,6 @@ class QueueService(
 
     companion object {
         const val NO_REMAINING_WAIT_LIST_COUNT = 0
+        const val ALLOWED_MAX_SIZE = 100
     }
 }
