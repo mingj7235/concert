@@ -15,7 +15,7 @@ interface QueueJpaRepository : JpaRepository<Queue, Long> {
 
     fun findByToken(token: String): Queue?
 
-    @Query("select count(queue) from Queue queue where queue.queueStatus = :queueStatus and queue.id < :queueId")
+    @Query("select count(queue.id) from Queue queue where queue.queueStatus = :queueStatus and queue.id < :queueId")
     fun getPositionInStatus(
         queueId: Long,
         queueStatus: QueueStatus,
