@@ -1,5 +1,6 @@
 package com.hhplus.concert.common.exception.handler
 
+import com.hhplus.concert.common.exception.error.ConcertException
 import com.hhplus.concert.common.exception.error.QueueException
 import com.hhplus.concert.common.exception.error.UserException
 import org.springframework.http.HttpStatus
@@ -24,6 +25,13 @@ class ApiAdviceHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(QueueException::class)
     fun handleQueueException(e: Exception): ResponseEntity<ErrorResponse> =
+        ResponseEntity(
+            ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.message.orEmpty()),
+            HttpStatus.BAD_REQUEST,
+        )
+
+    @ExceptionHandler(ConcertException::class)
+    fun handleConcertException(e: Exception): ResponseEntity<ErrorResponse> =
         ResponseEntity(
             ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.message.orEmpty()),
             HttpStatus.BAD_REQUEST,

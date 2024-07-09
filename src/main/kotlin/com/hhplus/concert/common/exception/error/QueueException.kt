@@ -6,4 +6,6 @@ open class QueueException(
     class QueueNotFound : QueueException("Queue not found")
 
     class InvalidRequest : QueueException("Invalid request")
+
+    class NotAllowed : QueueException("Queue is not processing")
 }
