@@ -14,3 +14,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+jwt:
+  secret: concert_jwt_secret
+  expiration-days: 1
+
+queue:
+  allowed-max-size: 100
+
+springdoc:
+  swagger-ui:
+    path: /api-docs/
