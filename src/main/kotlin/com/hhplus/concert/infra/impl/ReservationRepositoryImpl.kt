@@ -24,4 +24,6 @@ class ReservationRepositoryImpl(
         reservationIds: List<Long>,
         reservationStatus: ReservationStatus,
     ): List<Reservation> = reservationJpaRepository.updateAllStatus(reservationIds, reservationStatus)
+
+    override fun findAllById(reservationIds: List<Long>): List<Reservation> = reservationJpaRepository.findAllByIdFetchSeat(reservationIds)
 }

@@ -73,6 +73,15 @@ class ReservationManager(
         )
     }
 
+    fun findAllById(reservationIds: List<Long>): List<Reservation> = reservationRepository.findAllById(reservationIds)
+
+    fun complete(requestReservations: List<Reservation>) {
+        reservationRepository.updateAllStatus(
+            reservationIds = requestReservations.map { it.id },
+            ReservationStatus.PAYMENT_COMPLETED,
+        )
+    }
+
     companion object {
         const val RESERVATION_EXPIRATION_MINUTE = 5L
     }
