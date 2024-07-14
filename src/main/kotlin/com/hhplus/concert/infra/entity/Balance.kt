@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -21,7 +21,7 @@ class Balance(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var user: User = user
         protected set
@@ -33,4 +33,9 @@ class Balance(
     @Column(name = "last_update_at", nullable = false)
     var lastUpdatedAt: LocalDateTime = lastUpdatedAt
         protected set
+
+    fun updateAmount(amount: Long) {
+        this.amount += amount
+        this.lastUpdatedAt = LocalDateTime.now()
+    }
 }

@@ -1,5 +1,6 @@
 package com.hhplus.concert.infra.entity
 
+import com.hhplus.concert.common.type.ConcertStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -10,6 +11,7 @@ import jakarta.persistence.Id
 class Concert(
     title: String,
     description: String,
+    concertStatus: ConcertStatus,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +23,9 @@ class Concert(
 
     @Column(name = "description")
     var description: String = description
+        protected set
+
+    @Column(name = "status")
+    var concertStatus: ConcertStatus = concertStatus
         protected set
 }
