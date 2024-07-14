@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 class Payment(
     user: User,
     reservation: Reservation,
-    amount: Long,
+    amount: Int,
     executedAt: LocalDateTime,
     paymentStatus: PaymentStatus,
 ) {
@@ -37,7 +37,7 @@ class Payment(
         protected set
 
     @Column(name = "amount", nullable = false)
-    var amount: Long = amount
+    var amount: Int = amount
         protected set
 
     @Column(name = "executed_at", nullable = false)

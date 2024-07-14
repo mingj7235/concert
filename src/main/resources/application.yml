@@ -21,3 +21,7 @@ jwt:
 
 queue:
   allowed-max-size: 100
+
+springdoc:
+  swagger-ui:
+    path: /api-docs/
