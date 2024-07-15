@@ -6,6 +6,8 @@ import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
+import com.hhplus.concert.common.exception.error.ConcertException
+import com.hhplus.concert.common.exception.error.UserException
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.infrastructure.entity.Reservation
@@ -25,8 +27,8 @@ class ReservationManager(
      * 2. 좌석 상태를 Unavailable 로 변경한다.
      */
     fun createReservations(reservationRequest: ReservationServiceDto.Request): List<Reservation> {
-        val user = userRepository.findById(reservationRequest.userId)
-        val concert = concertRepository.findById(reservationRequest.concertId)
+        val user = userRepository.findById(reservationRequest.userId) ?: throw UserException.UserNotFound()
+        val concert = concertRepository.findById(reservationRequest.concertId) ?: throw ConcertException.NotFound()
         val concertSchedule = concertScheduleRepository.findById(reservationRequest.scheduleId)
         val seats = seatRepository.findAllById(reservationRequest.seatIds)
 

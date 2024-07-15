@@ -66,7 +66,7 @@ class ConcertManager(
     }
 
     private fun validateConcertStatus(concertId: Long) {
-        val concert = concertRepository.findById(concertId)
+        val concert = concertRepository.findById(concertId) ?: throw ConcertException.NotFound()
         if (concert.concertStatus == ConcertStatus.UNAVAILABLE) throw ConcertException.UnAvailable()
     }
 
