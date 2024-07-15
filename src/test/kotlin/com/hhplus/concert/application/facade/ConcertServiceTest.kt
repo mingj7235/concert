@@ -1,18 +1,19 @@
 package com.hhplus.concert.application.facade
 
+import com.hhplus.concert.business.application.service.ConcertService
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.common.exception.error.QueueException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.domain.manager.concert.ConcertManager
 import com.hhplus.concert.domain.manager.concert.ConcertManagerTest.Companion.AVAILABLE_CONCERT
-import com.hhplus.concert.domain.manager.queue.QueueManager
 import com.hhplus.concert.domain.manager.queue.QueueManagerTest
-import com.hhplus.concert.infra.entity.Concert
-import com.hhplus.concert.infra.entity.ConcertSchedule
-import com.hhplus.concert.infra.entity.Queue
-import com.hhplus.concert.infra.entity.Seat
-import com.hhplus.concert.infra.entity.User
+import com.hhplus.concert.infrastructure.entity.Concert
+import com.hhplus.concert.infrastructure.entity.ConcertSchedule
+import com.hhplus.concert.infrastructure.entity.Queue
+import com.hhplus.concert.infrastructure.entity.Seat
+import com.hhplus.concert.infrastructure.entity.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

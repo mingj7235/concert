@@ -1,11 +1,12 @@
 package com.hhplus.concert.domain.manager.queue
 
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
+import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.common.exception.error.QueueException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
-import com.hhplus.concert.domain.repository.QueueRepository
-import com.hhplus.concert.infra.entity.Queue
-import com.hhplus.concert.infra.entity.User
+import com.hhplus.concert.infrastructure.entity.Queue
+import com.hhplus.concert.infrastructure.entity.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals

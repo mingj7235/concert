@@ -1,23 +1,24 @@
 package com.hhplus.concert.application.facade
 
-import com.hhplus.concert.application.dto.ReservationServiceDto
+import com.hhplus.concert.business.application.dto.ReservationServiceDto
+import com.hhplus.concert.business.application.service.ReservationService
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
+import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
+import com.hhplus.concert.business.domain.manager.user.UserManager
 import com.hhplus.concert.common.exception.error.ConcertException
 import com.hhplus.concert.common.exception.error.QueueException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.domain.manager.concert.ConcertManager
-import com.hhplus.concert.domain.manager.queue.QueueManager
-import com.hhplus.concert.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.domain.manager.reservation.ReservationManagerTest
-import com.hhplus.concert.domain.manager.user.UserManager
-import com.hhplus.concert.infra.entity.Concert
-import com.hhplus.concert.infra.entity.ConcertSchedule
-import com.hhplus.concert.infra.entity.Queue
-import com.hhplus.concert.infra.entity.Reservation
-import com.hhplus.concert.infra.entity.Seat
-import com.hhplus.concert.infra.entity.User
+import com.hhplus.concert.infrastructure.entity.Concert
+import com.hhplus.concert.infrastructure.entity.ConcertSchedule
+import com.hhplus.concert.infrastructure.entity.Queue
+import com.hhplus.concert.infrastructure.entity.Reservation
+import com.hhplus.concert.infrastructure.entity.Seat
+import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
@@ -131,7 +132,7 @@ class ReservationServiceTest {
         `when`(concertManager.getAvailableSeats(request.concertId, request.scheduleId)).thenReturn(availableSeats)
 
         // When & Then
-        assertThrows<ConcertException.Unavailable> {
+        assertThrows<ConcertException.UnAvailable> {
             reservationService.createReservations(TOKEN, request)
         }
     }

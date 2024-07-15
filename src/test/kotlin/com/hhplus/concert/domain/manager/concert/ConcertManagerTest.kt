@@ -1,14 +1,15 @@
 package com.hhplus.concert.domain.manager.concert
 
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.repository.ConcertRepository
+import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
+import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.common.exception.error.ConcertException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.domain.repository.ConcertRepository
-import com.hhplus.concert.domain.repository.ConcertScheduleRepository
-import com.hhplus.concert.domain.repository.SeatRepository
-import com.hhplus.concert.infra.entity.Concert
-import com.hhplus.concert.infra.entity.ConcertSchedule
-import com.hhplus.concert.infra.entity.Seat
+import com.hhplus.concert.infrastructure.entity.Concert
+import com.hhplus.concert.infrastructure.entity.ConcertSchedule
+import com.hhplus.concert.infrastructure.entity.Seat
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
