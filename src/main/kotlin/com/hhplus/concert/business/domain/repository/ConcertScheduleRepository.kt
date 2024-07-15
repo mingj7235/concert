@@ -5,5 +5,5 @@ import com.hhplus.concert.infrastructure.entity.ConcertSchedule
 interface ConcertScheduleRepository {
     fun findAllByConcertId(concertId: Long): List<ConcertSchedule>
 
-    fun findById(scheduleId: Long): ConcertSchedule
+    fun findById(scheduleId: Long): ConcertSchedule?
 }

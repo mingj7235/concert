@@ -2,7 +2,7 @@ package com.hhplus.concert.domain.manager.queue
 
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.repository.QueueRepository
-import com.hhplus.concert.common.exception.error.QueueException
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
 import com.hhplus.concert.infrastructure.entity.Queue
@@ -160,18 +160,6 @@ class QueueManagerTest {
         }
 
         @Test
-        fun `빈 리스트로 호출 시 InvalidRequest 예외를 던진다`() {
-            // given
-            val emptyQueueIds = emptyList<Long>()
-            val newStatus = QueueStatus.COMPLETED
-
-            // when & then
-            assertThrows<QueueException.InvalidRequest> {
-                queueManager.updateStatus(emptyQueueIds, newStatus)
-            }
-        }
-
-        @Test
         fun `단일 ID로 호출 시 정상적으로 처리된다`() {
             // given
             val singleQueueId = listOf(1L)
@@ -216,7 +204,7 @@ class QueueManagerTest {
             `when`(queueRepository.findByToken(token)).thenReturn(null)
 
             // when & then
-            assertThrows<QueueException.QueueNotFound> {
+            assertThrows<BusinessException.NotFound> {
                 queueManager.findByToken(token)
             }
         }

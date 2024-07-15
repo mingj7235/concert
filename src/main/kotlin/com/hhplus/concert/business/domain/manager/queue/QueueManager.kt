@@ -1,7 +1,8 @@
 package com.hhplus.concert.business.domain.manager.queue
 
 import com.hhplus.concert.business.domain.repository.QueueRepository
-import com.hhplus.concert.common.exception.error.QueueException
+import com.hhplus.concert.common.error.code.QueueErrorCode
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
 import com.hhplus.concert.infrastructure.entity.Queue
@@ -57,7 +58,10 @@ class QueueManager(
         queueRepository.updateStatusForIds(queueIds, queueStatus)
     }
 
-    fun findByToken(token: String) = queueRepository.findByToken(token) ?: throw QueueException.QueueNotFound()
+    fun findByToken(token: String) =
+        queueRepository.findByToken(token) ?: throw BusinessException.NotFound(
+            QueueErrorCode.NOT_FOUND,
+        )
 
     /**
      * 현재 waiting list 중에서 조회하려는 queue 가 몇번째에 있는지를 확인한다.

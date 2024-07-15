@@ -3,7 +3,7 @@ package com.hhplus.concert.application.facade
 import com.hhplus.concert.business.application.service.ConcertService
 import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
-import com.hhplus.concert.common.exception.error.QueueException
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.SeatStatus
@@ -68,7 +68,7 @@ class ConcertServiceTest {
 
         `when`(queueManager.findByToken(token)).thenReturn(queue)
 
-        assertThrows<QueueException.NotAllowed> {
+        assertThrows<BusinessException.BadRequest> {
             concertService.getAvailableConcerts(token)
         }
     }
@@ -123,7 +123,7 @@ class ConcertServiceTest {
 
         `when`(queueManager.findByToken(token)).thenReturn(queue)
 
-        assertThrows<QueueException.NotAllowed> {
+        assertThrows<BusinessException.BadRequest> {
             concertService.getAvailableSeats(token, concertId, scheduleId)
         }
     }

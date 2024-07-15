@@ -6,8 +6,9 @@ import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
-import com.hhplus.concert.common.exception.error.ConcertException
-import com.hhplus.concert.common.exception.error.UserException
+import com.hhplus.concert.common.error.code.ConcertErrorCode
+import com.hhplus.concert.common.error.code.UserErrorCode
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.infrastructure.entity.Reservation
@@ -27,9 +28,15 @@ class ReservationManager(
      * 2. 좌석 상태를 Unavailable 로 변경한다.
      */
     fun createReservations(reservationRequest: ReservationServiceDto.Request): List<Reservation> {
-        val user = userRepository.findById(reservationRequest.userId) ?: throw UserException.UserNotFound()
-        val concert = concertRepository.findById(reservationRequest.concertId) ?: throw ConcertException.NotFound()
-        val concertSchedule = concertScheduleRepository.findById(reservationRequest.scheduleId)
+        val user =
+            userRepository.findById(reservationRequest.userId)
+                ?: throw BusinessException.NotFound(UserErrorCode.NOT_FOUND)
+        val concert =
+            concertRepository.findById(reservationRequest.concertId)
+                ?: throw BusinessException.NotFound(ConcertErrorCode.NOT_FOUND)
+        val concertSchedule =
+            concertScheduleRepository.findById(reservationRequest.scheduleId)
+                ?: throw BusinessException.NotFound(ConcertErrorCode.SCHEDULE_NOT_FOUND)
         val seats = seatRepository.findAllById(reservationRequest.seatIds)
 
         val reservations =

@@ -5,7 +5,7 @@ import com.hhplus.concert.business.domain.manager.payment.PaymentManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.business.domain.manager.user.UserManager
-import com.hhplus.concert.common.exception.error.PaymentException
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.infrastructure.entity.Payment
@@ -110,7 +110,7 @@ class PaymentServiceTest {
         `when`(invalidUser.id).thenReturn(2L)
 
         // When & Then
-        assertThrows(PaymentException.InvalidRequest::class.java) {
+        assertThrows(BusinessException.BadRequest::class.java) {
             paymentService.executePayment(token, userId, reservationIds)
         }
     }
