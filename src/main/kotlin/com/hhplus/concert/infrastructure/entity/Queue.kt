@@ -4,6 +4,8 @@ import com.hhplus.concert.common.type.QueueStatus
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -37,6 +39,7 @@ class Queue(
         protected set
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     var queueStatus: QueueStatus = queueStatus
         protected set
 

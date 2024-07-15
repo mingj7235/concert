@@ -24,7 +24,7 @@ class JwtUtil(
             .setClaims(claims)
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(expirationDate))
-            .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), SignatureAlgorithm.ES512)
+            .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), SignatureAlgorithm.HS512)
             .compact()
     }
 

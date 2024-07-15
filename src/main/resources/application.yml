@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
     show-sql: true
@@ -16,7 +16,7 @@ spring:
         format_sql: true
 
 jwt:
-  secret: concert_jwt_secret
+  secret: concert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secret
   expiration-days: 1
 
 queue:

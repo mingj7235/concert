@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 interface QueueJpaRepository : JpaRepository<Queue, Long> {
-    @Query("select queue from Queue queue where queue.user = :userId and queue.queueStatus = :queueStatus")
+    @Query("select queue from Queue queue where queue.user.id = :userId and queue.queueStatus = :queueStatus")
     fun findByUserIdAndStatus(
         userId: Long,
         queueStatus: QueueStatus,
