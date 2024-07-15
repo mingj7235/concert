@@ -64,6 +64,8 @@ class ReservationManager(
                 expirationTime,
             )
 
+        if (unpaidReservations.isEmpty()) return
+
         reservationRepository.updateAllStatus(
             reservationIds = unpaidReservations.map { it.id },
             reservationStatus = ReservationStatus.RESERVATION_CANCELLED,

@@ -53,7 +53,7 @@ class QueueManager(
         queueIds: List<Long>,
         queueStatus: QueueStatus,
     ) {
-        if (queueIds.isEmpty()) throw QueueException.InvalidRequest()
+        if (queueIds.isEmpty()) return
         queueRepository.updateStatusForIds(queueIds, queueStatus)
     }
 
