@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 
-/**
- * TODO : token manager 를 DI 받아 token 을 검증하도록 한다.
- */
 @Component
 class TokenInterceptor(
     private val jwtUtil: JwtUtil,
@@ -45,9 +42,5 @@ class TokenInterceptor(
         return true
     }
 
-    /**
-     * 토큰을 검증하는 로직을 넣는다.
-     * 일단은 true 를 리턴한다.
-     */
     private fun isValidToken(token: String): Boolean = jwtUtil.validateToken(token)
 }
