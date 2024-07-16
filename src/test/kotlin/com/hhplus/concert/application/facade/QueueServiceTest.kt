@@ -3,7 +3,7 @@ package com.hhplus.concert.application.facade
 import com.hhplus.concert.business.application.service.QueueService
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.user.UserManager
-import com.hhplus.concert.common.error.code.UserErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.domain.manager.queue.QueueManagerTest
@@ -89,7 +89,7 @@ class QueueServiceTest {
         @Test
         fun `사용자가 존재하지 않는 경우 예외를 던진다`() {
             // given
-            `when`(userManager.findById(NON_EXISTED_USER_ID)).thenThrow(BusinessException.NotFound(UserErrorCode.NOT_FOUND))
+            `when`(userManager.findById(NON_EXISTED_USER_ID)).thenThrow(BusinessException.NotFound(ErrorCode.User.NOT_FOUND))
 
             // when & then
             assertThrows<BusinessException.NotFound> {

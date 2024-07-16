@@ -1,7 +1,7 @@
 package com.hhplus.concert.business.domain.manager.queue
 
 import com.hhplus.concert.business.domain.repository.QueueRepository
-import com.hhplus.concert.common.error.code.QueueErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
@@ -60,7 +60,7 @@ class QueueManager(
 
     fun findByToken(token: String) =
         queueRepository.findByToken(token) ?: throw BusinessException.NotFound(
-            QueueErrorCode.NOT_FOUND,
+            ErrorCode.Queue.NOT_FOUND,
         )
 
     /**

@@ -2,8 +2,7 @@ package com.hhplus.concert.business.domain.manager.balance
 
 import com.hhplus.concert.business.domain.repository.BalanceRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
-import com.hhplus.concert.common.error.code.BalanceErrorCode
-import com.hhplus.concert.common.error.code.UserErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.infrastructure.entity.Balance
 import org.springframework.stereotype.Component
@@ -18,7 +17,7 @@ class BalanceManager(
         userId: Long,
         amount: Long,
     ): Balance {
-        val user = userRepository.findById(userId) ?: throw BusinessException.NotFound(UserErrorCode.NOT_FOUND)
+        val user = userRepository.findById(userId) ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND)
         return balanceRepository.findByUserId(user.id)?.apply {
             updateAmount(amount)
         } ?: balanceRepository.save(
@@ -31,5 +30,5 @@ class BalanceManager(
     }
 
     fun getBalanceByUserId(userId: Long): Balance =
-        balanceRepository.findByUserId(userId) ?: throw BusinessException.NotFound(BalanceErrorCode.NOT_FOUND)
+        balanceRepository.findByUserId(userId) ?: throw BusinessException.NotFound(ErrorCode.Balance.NOT_FOUND)
 }

@@ -5,7 +5,7 @@ import com.hhplus.concert.business.domain.manager.payment.PaymentManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.business.domain.manager.user.UserManager
-import com.hhplus.concert.common.error.code.PaymentErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import org.springframework.stereotype.Service
@@ -36,7 +36,7 @@ class PaymentService(
 
         // 결제 요청을 시도하는 user 와 예악한 목록의 user 가 일치하는지 확인한다.
         if (requestReservations.any { it.user.id != userId }) {
-            throw BusinessException.BadRequest(PaymentErrorCode.BAD_REQUEST)
+            throw BusinessException.BadRequest(ErrorCode.Payment.BAD_REQUEST)
         }
 
         // 결제를 한다.

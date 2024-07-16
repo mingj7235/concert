@@ -5,8 +5,7 @@ import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.business.domain.manager.user.UserManager
-import com.hhplus.concert.common.error.code.ConcertErrorCode
-import com.hhplus.concert.common.error.code.QueueErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import org.springframework.stereotype.Service
@@ -71,7 +70,7 @@ class ReservationService(
 
     private fun validateQueueStatus(token: String) {
         val queue = queueManager.findByToken(token)
-        if (queue.queueStatus != QueueStatus.PROCESSING) throw BusinessException.BadRequest(QueueErrorCode.NOT_ALLOWED)
+        if (queue.queueStatus != QueueStatus.PROCESSING) throw BusinessException.BadRequest(ErrorCode.Queue.NOT_ALLOWED)
     }
 
     private fun validateReservationRequest(
@@ -87,6 +86,6 @@ class ReservationService(
                 ).filter { it.id in requestSeatIds }
                 .size
 
-        if (requestSeatIds.size != filteredAvailableSeatsCount) throw BusinessException.BadRequest(ConcertErrorCode.UNAVAILABLE)
+        if (requestSeatIds.size != filteredAvailableSeatsCount) throw BusinessException.BadRequest(ErrorCode.Concert.UNAVAILABLE)
     }
 }

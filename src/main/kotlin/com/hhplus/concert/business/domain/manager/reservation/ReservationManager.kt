@@ -6,8 +6,7 @@ import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
-import com.hhplus.concert.common.error.code.ConcertErrorCode
-import com.hhplus.concert.common.error.code.UserErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
@@ -30,13 +29,13 @@ class ReservationManager(
     fun createReservations(reservationRequest: ReservationServiceDto.Request): List<Reservation> {
         val user =
             userRepository.findById(reservationRequest.userId)
-                ?: throw BusinessException.NotFound(UserErrorCode.NOT_FOUND)
+                ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND)
         val concert =
             concertRepository.findById(reservationRequest.concertId)
-                ?: throw BusinessException.NotFound(ConcertErrorCode.NOT_FOUND)
+                ?: throw BusinessException.NotFound(ErrorCode.Concert.NOT_FOUND)
         val concertSchedule =
             concertScheduleRepository.findById(reservationRequest.scheduleId)
-                ?: throw BusinessException.NotFound(ConcertErrorCode.SCHEDULE_NOT_FOUND)
+                ?: throw BusinessException.NotFound(ErrorCode.Concert.SCHEDULE_NOT_FOUND)
         val seats = seatRepository.findAllById(reservationRequest.seatIds)
 
         val reservations =

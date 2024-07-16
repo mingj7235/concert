@@ -3,7 +3,7 @@ package com.hhplus.concert.business.domain.manager.concert
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
-import com.hhplus.concert.common.error.code.ConcertErrorCode
+import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.infrastructure.entity.Concert
@@ -56,21 +56,21 @@ class ConcertManager(
 
         val concertSchedule =
             concertScheduleRepository.findById(scheduleId)
-                ?: throw BusinessException.NotFound(ConcertErrorCode.SCHEDULE_NOT_FOUND)
+                ?: throw BusinessException.NotFound(ErrorCode.Concert.SCHEDULE_NOT_FOUND)
         if (!validateScheduleReservationTime(
                 reservationAvailableAt = concertSchedule.reservationAvailableAt,
                 concertAt = concertSchedule.concertAt,
             )
         ) {
-            throw BusinessException.BadRequest(ConcertErrorCode.UNAVAILABLE)
+            throw BusinessException.BadRequest(ErrorCode.Concert.UNAVAILABLE)
         }
 
         return seatRepository.findAllByScheduleId(scheduleId)
     }
 
     private fun validateConcertStatus(concertId: Long) {
-        val concert = concertRepository.findById(concertId) ?: throw BusinessException.NotFound(ConcertErrorCode.NOT_FOUND)
-        if (concert.concertStatus == ConcertStatus.UNAVAILABLE) throw BusinessException.BadRequest(ConcertErrorCode.UNAVAILABLE)
+        val concert = concertRepository.findById(concertId) ?: throw BusinessException.NotFound(ErrorCode.Concert.NOT_FOUND)
+        if (concert.concertStatus == ConcertStatus.UNAVAILABLE) throw BusinessException.BadRequest(ErrorCode.Concert.UNAVAILABLE)
     }
 
     private fun validateScheduleReservationTime(
