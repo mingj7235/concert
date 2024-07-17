@@ -13,5 +13,5 @@ interface SeatRepository {
         status: SeatStatus,
     ): List<Long>
 
-    fun save(seat: Seat)
+    fun save(seat: Seat): Seat
 }

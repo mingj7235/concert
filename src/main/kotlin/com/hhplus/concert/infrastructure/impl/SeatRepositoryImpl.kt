@@ -19,7 +19,5 @@ class SeatRepositoryImpl(
         status: SeatStatus,
     ): List<Long> = seatJpaRepository.updateAllStatus(seatIds, status)
 
-    override fun save(seat: Seat) {
-        seatJpaRepository.save(seat)
-    }
+    override fun save(seat: Seat): Seat = seatJpaRepository.save(seat)
 }
