@@ -34,6 +34,8 @@ class PaymentService(
         val user = userManager.findById(userId)
         val requestReservations = reservationManager.findAllById(reservationIds)
 
+        if (requestReservations.isEmpty()) throw BusinessException.BadRequest(ErrorCode.Payment.NOT_FOUND)
+
         // 결제 요청을 시도하는 user 와 예악한 목록의 user 가 일치하는지 확인한다.
         if (requestReservations.any { it.user.id != userId }) {
             throw BusinessException.BadRequest(ErrorCode.Payment.BAD_REQUEST)
