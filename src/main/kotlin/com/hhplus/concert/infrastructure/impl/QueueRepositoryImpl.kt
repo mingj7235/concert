@@ -5,11 +5,14 @@ import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.infrastructure.entity.Queue
 import com.hhplus.concert.infrastructure.jpa.QueueJpaRepository
 import org.springframework.stereotype.Repository
+import kotlin.jvm.optionals.getOrNull
 
 @Repository
 class QueueRepositoryImpl(
     private val queueJpaRepository: QueueJpaRepository,
 ) : QueueRepository {
+    override fun findById(queueId: Long): Queue? = queueJpaRepository.findById(queueId).getOrNull()
+
     override fun findByUserIdAndStatus(
         userId: Long,
         queueStatus: QueueStatus,
@@ -19,9 +22,7 @@ class QueueRepositoryImpl(
             queueStatus = queueStatus,
         )
 
-    override fun save(queue: Queue) {
-        queueJpaRepository.save(queue)
-    }
+    override fun save(queue: Queue): Queue? = queueJpaRepository.save(queue)
 
     override fun findByToken(token: String): Queue? = queueJpaRepository.findByToken(token)
 

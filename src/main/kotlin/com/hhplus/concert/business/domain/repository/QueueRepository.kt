@@ -4,12 +4,14 @@ import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.infrastructure.entity.Queue
 
 interface QueueRepository {
+    fun findById(queueId: Long): Queue?
+
     fun findByUserIdAndStatus(
         userId: Long,
         queueStatus: QueueStatus,
     ): Queue?
 
-    fun save(queue: Queue)
+    fun save(queue: Queue): Queue?
 
     fun findByToken(token: String): Queue?
 
