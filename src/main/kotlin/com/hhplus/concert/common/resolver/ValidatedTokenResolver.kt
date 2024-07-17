@@ -1,6 +1,7 @@
 package com.hhplus.concert.common.resolver
 
 import com.hhplus.concert.common.annotation.ValidatedToken
+import com.hhplus.concert.common.constants.TokenConstants.VALIDATED_TOKEN
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -18,5 +19,5 @@ class ValidatedTokenResolver : HandlerMethodArgumentResolver {
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): Any? = webRequest.getAttribute("validatedToken", RequestAttributes.SCOPE_REQUEST)
+    ): Any? = webRequest.getAttribute(VALIDATED_TOKEN, RequestAttributes.SCOPE_REQUEST)
 }

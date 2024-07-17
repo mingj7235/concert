@@ -1,6 +1,8 @@
 package com.hhplus.concert.common.interceptor
 
 import com.hhplus.concert.common.annotation.TokenRequired
+import com.hhplus.concert.common.constants.TokenConstants.QUEUE_TOKEN_HEADER
+import com.hhplus.concert.common.constants.TokenConstants.VALIDATED_TOKEN
 import com.hhplus.concert.common.util.JwtUtil
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -26,18 +28,18 @@ class TokenInterceptor(
                 return true
             }
 
-            val token = request.getHeader("QUEUE-TOKEN")
+            val token = request.getHeader(QUEUE_TOKEN_HEADER)
             if (token == null) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "QUEUE-TOKEN is missing")
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "$QUEUE_TOKEN_HEADER is missing")
                 return false
             }
 
             if (!isValidToken(token)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid QUEUE-TOKEN")
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid $QUEUE_TOKEN_HEADER")
                 return false
             }
 
-            request.setAttribute("validatedToken", token)
+            request.setAttribute(VALIDATED_TOKEN, token)
         }
         return true
     }
