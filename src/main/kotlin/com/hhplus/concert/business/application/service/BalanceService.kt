@@ -2,6 +2,8 @@ package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.BalanceServiceDto
 import com.hhplus.concert.business.domain.manager.balance.BalanceManager
+import com.hhplus.concert.common.error.code.ErrorCode
+import com.hhplus.concert.common.error.exception.BusinessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,8 +22,10 @@ class BalanceService(
         userId: Long,
         amount: Long,
     ): BalanceServiceDto.Detail {
+        if (amount < 0) throw BusinessException.BadRequest(ErrorCode.Balance.BAD_RECHARGE_REQUEST)
+
         val rechargedBalance =
-            balanceManager.recharge(
+            balanceManager.updateAmount(
                 userId = userId,
                 amount = amount,
             )

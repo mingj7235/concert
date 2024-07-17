@@ -48,7 +48,7 @@ class BalanceManagerTest {
         `when`(balanceRepository.findByUserId(userId)).thenReturn(existingBalance)
 
         // When
-        val result = balanceManager.recharge(userId, rechargeAmount)
+        val result = balanceManager.updateAmount(userId, rechargeAmount)
 
         // Then
         assertEquals(initialAmount + rechargeAmount, result.amount)
