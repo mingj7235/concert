@@ -6,6 +6,7 @@ import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
+import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.infrastructure.entity.Concert
 import com.hhplus.concert.infrastructure.entity.ConcertSchedule
 import com.hhplus.concert.infrastructure.entity.Seat
@@ -65,7 +66,9 @@ class ConcertManager(
             throw BusinessException.BadRequest(ErrorCode.Concert.UNAVAILABLE)
         }
 
-        return seatRepository.findAllByScheduleId(scheduleId)
+        return seatRepository
+            .findAllByScheduleId(scheduleId)
+            .filter { it.seatStatus == SeatStatus.AVAILABLE }
     }
 
     private fun validateConcertStatus(concertId: Long) {

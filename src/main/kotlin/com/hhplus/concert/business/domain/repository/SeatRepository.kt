@@ -11,7 +11,9 @@ interface SeatRepository {
     fun updateAllStatus(
         seatIds: List<Long>,
         status: SeatStatus,
-    ): List<Long>
+    )
 
     fun save(seat: Seat): Seat
+
+    fun findById(seatId: Long): Seat?
 }
