@@ -5,6 +5,7 @@ import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.infrastructure.entity.Queue
 import com.hhplus.concert.infrastructure.jpa.QueueJpaRepository
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
@@ -50,4 +51,9 @@ class QueueRepositoryImpl(
     }
 
     override fun findAll(): List<Queue> = queueJpaRepository.findAll()
+
+    override fun findExpiredWaitingQueueIds(
+        queueStatus: QueueStatus,
+        expiredAt: LocalDateTime,
+    ): List<Long> = queueJpaRepository.findExpiredWaitingQueueIds(queueStatus, expiredAt)
 }

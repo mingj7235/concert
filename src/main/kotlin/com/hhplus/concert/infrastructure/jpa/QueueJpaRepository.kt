@@ -5,6 +5,7 @@ import com.hhplus.concert.infrastructure.entity.Queue
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import java.time.LocalDateTime
 
 interface QueueJpaRepository : JpaRepository<Queue, Long> {
     @Query("select queue from Queue queue where queue.user.id = :userId and queue.queueStatus = :queueStatus")
@@ -29,10 +30,16 @@ interface QueueJpaRepository : JpaRepository<Queue, Long> {
         limit: Int,
     ): List<Queue>
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Queue queue set queue.queueStatus = :queueStatus where queue.id in :queueIds")
     fun updateStatusForIds(
         queueIds: List<Long>,
         queueStatus: QueueStatus,
     )
+
+    @Query("select queue.id from Queue queue where queue.queueStatus = :queueStatus and queue.joinedAt < :expiredAt")
+    fun findExpiredWaitingQueueIds(
+        queueStatus: QueueStatus,
+        expiredAt: LocalDateTime,
+    ): List<Long>
 }
