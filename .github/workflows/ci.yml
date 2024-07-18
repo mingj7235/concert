@@ -40,12 +40,4 @@ jobs:
           context: .
           file: ./docker/production/prod.Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-
-      - name: Deploy with Docker Compose
-        run: |
-          echo "${{ secrets.AUTH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker-compose -f docker/production/docker-compose-prod.yml pull
-          docker-compose -f docker/production/docker-compose-prod.yml up -d
-          docker image prune -f
-          docker network prune -f
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
