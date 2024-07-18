@@ -40,7 +40,7 @@ jobs:
           context: .
           file: ./docker/production/prod.Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy with Docker Compose
         run: |

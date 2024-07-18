@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_SHA}
+    image: ghcr.io/${GITHUB_REPOSITORY}:latest
     ports:
       - "8080:8080"
     environment:
