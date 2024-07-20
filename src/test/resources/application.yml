@@ -1,15 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:h2:mem:test;NON_KEYWORDS=USER
     driverClassName: org.h2.Driver
     username: sa
     password:
 
-    jpa:
+  jpa:
+    properties:
       hibernate:
-        ddl-auto: create-drop
-      database-platform: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.H2Dialect
+        hbm2ddl:
+          auto: create-drop
 
 jwt:
-  secret: concert_jwt_secret
+  secret: concert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secret
   expiration-days: 1

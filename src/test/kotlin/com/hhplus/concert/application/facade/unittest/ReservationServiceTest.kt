@@ -1,4 +1,4 @@
-package com.hhplus.concert.application.facade
+package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.dto.ReservationServiceDto
 import com.hhplus.concert.business.application.service.ReservationService
@@ -6,8 +6,7 @@ import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.business.domain.manager.user.UserManager
-import com.hhplus.concert.common.exception.error.ConcertException
-import com.hhplus.concert.common.exception.error.QueueException
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.ReservationStatus
@@ -108,7 +107,7 @@ class ReservationServiceTest {
         `when`(queueManager.findByToken(TOKEN)).thenReturn(queue)
 
         // When & Then
-        assertThrows<QueueException.NotAllowed> {
+        assertThrows<BusinessException.BadRequest> {
             reservationService.createReservations(TOKEN, request)
         }
     }
@@ -132,7 +131,7 @@ class ReservationServiceTest {
         `when`(concertManager.getAvailableSeats(request.concertId, request.scheduleId)).thenReturn(availableSeats)
 
         // When & Then
-        assertThrows<ConcertException.UnAvailable> {
+        assertThrows<BusinessException.BadRequest> {
             reservationService.createReservations(TOKEN, request)
         }
     }

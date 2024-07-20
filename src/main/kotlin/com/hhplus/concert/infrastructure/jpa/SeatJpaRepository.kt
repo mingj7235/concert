@@ -10,10 +10,10 @@ interface SeatJpaRepository : JpaRepository<Seat, Long> {
     @Query("select seat from Seat seat where seat.concertSchedule.id = :scheduleId")
     fun findAllByScheduleId(scheduleId: Long): List<Seat>
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Seat seat set seat.seatStatus = :status where seat.id in :seatIds")
     fun updateAllStatus(
         seatIds: List<Long>,
         status: SeatStatus,
-    ): List<Long>
+    )
 }

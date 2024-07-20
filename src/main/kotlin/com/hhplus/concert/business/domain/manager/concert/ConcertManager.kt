@@ -3,8 +3,10 @@ package com.hhplus.concert.business.domain.manager.concert
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
-import com.hhplus.concert.common.exception.error.ConcertException
+import com.hhplus.concert.common.error.code.ErrorCode
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
+import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.infrastructure.entity.Concert
 import com.hhplus.concert.infrastructure.entity.ConcertSchedule
 import com.hhplus.concert.infrastructure.entity.Seat
@@ -53,21 +55,25 @@ class ConcertManager(
     ): List<Seat> {
         validateConcertStatus(concertId)
 
-        val concertSchedule = concertScheduleRepository.findById(scheduleId)
+        val concertSchedule =
+            concertScheduleRepository.findById(scheduleId)
+                ?: throw BusinessException.NotFound(ErrorCode.Concert.SCHEDULE_NOT_FOUND)
         if (!validateScheduleReservationTime(
                 reservationAvailableAt = concertSchedule.reservationAvailableAt,
                 concertAt = concertSchedule.concertAt,
             )
         ) {
-            throw ConcertException.UnAvailable()
+            throw BusinessException.BadRequest(ErrorCode.Concert.UNAVAILABLE)
         }
 
-        return seatRepository.findAllByScheduleId(scheduleId)
+        return seatRepository
+            .findAllByScheduleId(scheduleId)
+            .filter { it.seatStatus == SeatStatus.AVAILABLE }
     }
 
     private fun validateConcertStatus(concertId: Long) {
-        val concert = concertRepository.findById(concertId) ?: throw ConcertException.NotFound()
-        if (concert.concertStatus == ConcertStatus.UNAVAILABLE) throw ConcertException.UnAvailable()
+        val concert = concertRepository.findById(concertId) ?: throw BusinessException.NotFound(ErrorCode.Concert.NOT_FOUND)
+        if (concert.concertStatus == ConcertStatus.UNAVAILABLE) throw BusinessException.BadRequest(ErrorCode.Concert.UNAVAILABLE)
     }
 
     private fun validateScheduleReservationTime(

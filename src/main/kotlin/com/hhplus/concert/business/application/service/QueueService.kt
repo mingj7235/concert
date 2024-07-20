@@ -76,6 +76,17 @@ class QueueService(
         }
     }
 
+    /**
+     * 스케쥴러를 통해 일정 시간이 지났지만 여전히 WAITING 상태인 queue 를 CANCELLED 로 변환시킨다.
+     */
+    @Transactional
+    fun cancelExpiredWaitingQueue() {
+        queueManager.updateStatus(
+            queueIds = queueManager.getExpiredWaitingQueueIds(),
+            queueStatus = QueueStatus.CANCELLED,
+        )
+    }
+
     companion object {
         const val NO_REMAINING_WAIT_LIST_COUNT = 0
         const val ALLOWED_MAX_SIZE = 100

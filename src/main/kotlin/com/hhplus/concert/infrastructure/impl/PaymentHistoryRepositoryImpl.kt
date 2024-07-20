@@ -12,4 +12,6 @@ class PaymentHistoryRepositoryImpl(
     override fun save(paymentHistory: PaymentHistory) {
         paymentHistoryJpaRepository.save(paymentHistory)
     }
+
+    override fun findAllByPaymentId(paymentId: Long): List<PaymentHistory> = paymentHistoryJpaRepository.findAllByPaymentId(paymentId)
 }

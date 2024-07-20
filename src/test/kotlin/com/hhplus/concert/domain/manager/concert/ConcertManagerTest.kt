@@ -4,7 +4,7 @@ import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
-import com.hhplus.concert.common.exception.error.ConcertException
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.infrastructure.entity.Concert
@@ -78,7 +78,7 @@ class ConcertManagerTest {
         `when`(concertRepository.findById(concertId)).thenReturn(UNAVAILABLE_CONCERT)
 
         // when & then
-        assertThrows<ConcertException.UnAvailable> {
+        assertThrows<BusinessException.BadRequest> {
             concertManager.getAvailableConcertSchedules(concertId)
         }
     }
@@ -113,7 +113,7 @@ class ConcertManagerTest {
 
         `when`(concertRepository.findById(concertId)).thenReturn(UNAVAILABLE_CONCERT)
 
-        assertThrows<ConcertException.UnAvailable> {
+        assertThrows<BusinessException.BadRequest> {
             concertManager.getAvailableSeats(concertId, scheduleId)
         }
     }
@@ -126,7 +126,7 @@ class ConcertManagerTest {
         `when`(concertRepository.findById(concertId)).thenReturn(AVAILABLE_CONCERT)
         `when`(concertScheduleRepository.findById(scheduleId)).thenReturn(INVALID_SCHEDULE)
 
-        assertThrows<ConcertException.UnAvailable> {
+        assertThrows<BusinessException.BadRequest> {
             concertManager.getAvailableSeats(concertId, scheduleId)
         }
     }

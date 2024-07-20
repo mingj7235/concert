@@ -3,7 +3,8 @@ package com.hhplus.concert.business.application.service
 import com.hhplus.concert.business.application.dto.ConcertServiceDto
 import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
-import com.hhplus.concert.common.exception.error.QueueException
+import com.hhplus.concert.common.error.code.ErrorCode
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import org.springframework.stereotype.Service
 
@@ -85,6 +86,6 @@ class ConcertService(
 
     private fun validateQueueStatus(token: String) {
         val queue = queueManager.findByToken(token)
-        if (queue.queueStatus != QueueStatus.PROCESSING) throw QueueException.NotAllowed()
+        if (queue.queueStatus != QueueStatus.PROCESSING) throw BusinessException.BadRequest(ErrorCode.Queue.NOT_ALLOWED)
     }
 }

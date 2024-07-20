@@ -13,7 +13,7 @@ class WebConfig(
     private val validatedTokenResolver: ValidatedTokenResolver,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(tokenInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(tokenInterceptor)
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {

@@ -14,12 +14,12 @@ interface ReservationJpaRepository : JpaRepository<Reservation, Long> {
         expirationTime: LocalDateTime,
     ): List<Reservation>
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Reservation r set r.reservationStatus = :reservationStatus where r.id in :reservationIds")
     fun updateAllStatus(
         reservationIds: List<Long>,
         reservationStatus: ReservationStatus,
-    ): List<Reservation>
+    )
 
     @Query("SELECT r FROM Reservation r JOIN FETCH r.seat WHERE r.id IN :reservationIds")
     fun findAllByIdFetchSeat(reservationIds: List<Long>): List<Reservation>

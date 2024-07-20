@@ -17,7 +17,9 @@ interface ReservationRepository {
     fun updateAllStatus(
         reservationIds: List<Long>,
         reservationStatus: ReservationStatus,
-    ): List<Reservation>
+    )
 
     fun findAllById(reservationIds: List<Long>): List<Reservation>
+
+    fun findById(reservationId: Long): Reservation?
 }
