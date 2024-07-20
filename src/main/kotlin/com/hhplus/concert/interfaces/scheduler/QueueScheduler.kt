@@ -16,4 +16,10 @@ class QueueScheduler(
         logger.info("Maintain Processing Scheduler Executed")
         queueService.maintainProcessingCount()
     }
+
+    @Scheduled(fixedRate = 60000)
+    fun cancelExpiredWaitingQueue() {
+        logger.info("Cancel Expired Waiting Queue Executed")
+        queueService.cancelExpiredWaitingQueue()
+    }
 }

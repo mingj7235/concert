@@ -33,6 +33,7 @@ sealed interface ErrorCode {
         override val message: String,
     ) : ErrorCode {
         NOT_FOUND(HttpStatus.NOT_FOUND, "BALANCE001", "해당 잔액 정보를 찾을 수 없습니다."),
+        BAD_RECHARGE_REQUEST(HttpStatus.BAD_REQUEST, "BALANCE002", "잘못된 잔액 충전 요청입니다."),
     }
 
     enum class Payment(
@@ -40,7 +41,8 @@ sealed interface ErrorCode {
         override val errorCode: String,
         override val message: String,
     ) : ErrorCode {
-        BAD_REQUEST(HttpStatus.BAD_REQUEST, "PAYMENT001", "잘못된 결제 정보 요청입니다."),
+        NOT_FOUND(HttpStatus.NOT_FOUND, "PAYMENT001", "결제 정보를 찾을 수 없습니다."),
+        BAD_REQUEST(HttpStatus.BAD_REQUEST, "PAYMENT002", "잘못된 결제 정보 요청입니다."),
     }
 
     enum class User(

@@ -1,4 +1,4 @@
-package com.hhplus.concert.application.facade
+package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.service.ConcertService
 import com.hhplus.concert.business.domain.manager.concert.ConcertManager

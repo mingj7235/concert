@@ -6,6 +6,7 @@ import com.hhplus.concert.infrastructure.entity.Reservation
 import com.hhplus.concert.infrastructure.jpa.ReservationJpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
+import kotlin.jvm.optionals.getOrNull
 
 @Repository
 class ReservationRepositoryImpl(
@@ -23,7 +24,11 @@ class ReservationRepositoryImpl(
     override fun updateAllStatus(
         reservationIds: List<Long>,
         reservationStatus: ReservationStatus,
-    ): List<Reservation> = reservationJpaRepository.updateAllStatus(reservationIds, reservationStatus)
+    ) {
+        reservationJpaRepository.updateAllStatus(reservationIds, reservationStatus)
+    }
 
     override fun findAllById(reservationIds: List<Long>): List<Reservation> = reservationJpaRepository.findAllByIdFetchSeat(reservationIds)
+
+    override fun findById(reservationId: Long): Reservation? = reservationJpaRepository.findById(reservationId).getOrNull()
 }

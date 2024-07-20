@@ -2,14 +2,17 @@ package com.hhplus.concert.business.domain.repository
 
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.infrastructure.entity.Queue
+import java.time.LocalDateTime
 
 interface QueueRepository {
+    fun findById(queueId: Long): Queue?
+
     fun findByUserIdAndStatus(
         userId: Long,
         queueStatus: QueueStatus,
     ): Queue?
 
-    fun save(queue: Queue)
+    fun save(queue: Queue): Queue?
 
     fun findByToken(token: String): Queue?
 
@@ -33,4 +36,9 @@ interface QueueRepository {
     fun deleteAll()
 
     fun findAll(): List<Queue>
+
+    fun findExpiredWaitingQueueIds(
+        queueStatus: QueueStatus,
+        expiredAt: LocalDateTime,
+    ): List<Long>
 }

@@ -10,4 +10,6 @@ class PaymentRepositoryImpl(
     private val paymentJpaRepository: PaymentJpaRepository,
 ) : PaymentRepository {
     override fun save(payment: Payment): Payment = paymentJpaRepository.save(payment)
+
+    override fun findByReservationId(reservationId: Long): Payment? = paymentJpaRepository.findByReservationId(reservationId)
 }

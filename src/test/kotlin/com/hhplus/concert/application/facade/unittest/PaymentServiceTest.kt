@@ -1,4 +1,4 @@
-package com.hhplus.concert.application.facade
+package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.service.PaymentService
 import com.hhplus.concert.business.domain.manager.payment.PaymentManager

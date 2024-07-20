@@ -13,4 +13,10 @@ class ConcertRepositoryImpl(
     override fun findById(concertId: Long): Concert? = concertJpaRepository.findById(concertId).getOrNull()
 
     override fun findAll(): List<Concert> = concertJpaRepository.findAll()
+
+    override fun save(concert: Concert): Concert = concertJpaRepository.save(concert)
+
+    override fun saveAll(concerts: List<Concert>) {
+        concertJpaRepository.saveAll(concerts)
+    }
 }

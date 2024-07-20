@@ -80,4 +80,14 @@ class QueueManager(
                 queueStatus = QueueStatus.WAITING,
                 limit = neededToUpdateCount,
             ).map { it.id }
+
+    /**
+     * 1시간이 지났지만 여전히 WAITING 상태의 queue 를 조회한다.
+     */
+    fun getExpiredWaitingQueueIds(now: LocalDateTime = LocalDateTime.now()): List<Long> =
+        queueRepository
+            .findExpiredWaitingQueueIds(
+                queueStatus = QueueStatus.WAITING,
+                expiredAt = now.minusHours(1),
+            )
 }

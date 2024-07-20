@@ -13,7 +13,7 @@ class BalanceManager(
     private val userRepository: UserRepository,
     private val balanceRepository: BalanceRepository,
 ) {
-    fun recharge(
+    fun updateAmount(
         userId: Long,
         amount: Long,
     ): Balance {

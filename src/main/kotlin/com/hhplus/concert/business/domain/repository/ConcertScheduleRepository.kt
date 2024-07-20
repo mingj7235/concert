@@ -6,4 +6,6 @@ interface ConcertScheduleRepository {
     fun findAllByConcertId(concertId: Long): List<ConcertSchedule>
 
     fun findById(scheduleId: Long): ConcertSchedule?
+
+    fun save(concertSchedule: ConcertSchedule): ConcertSchedule
 }
