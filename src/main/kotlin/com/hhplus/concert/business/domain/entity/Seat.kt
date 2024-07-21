@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.Version
 
 @Entity
 class Seat(
@@ -41,4 +42,11 @@ class Seat(
     @Column(name = "seat_price", nullable = false)
     var seatPrice: Int = seatPrice
         protected set
+
+    @Version
+    var version: Long = 0
+
+    fun updateStatus(status: SeatStatus) {
+        this.seatStatus = status
+    }
 }

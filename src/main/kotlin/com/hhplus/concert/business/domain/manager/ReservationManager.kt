@@ -36,7 +36,14 @@ class ReservationManager(
         val concertSchedule =
             concertScheduleRepository.findById(reservationRequest.scheduleId)
                 ?: throw BusinessException.NotFound(ErrorCode.Concert.SCHEDULE_NOT_FOUND)
-        val seats = seatRepository.findAllById(reservationRequest.seatIds)
+        val seats = seatRepository.finaAllByIdWithLock(reservationRequest.seatIds)
+
+        seats.forEach { seat ->
+            if (seat.seatStatus != SeatStatus.AVAILABLE) {
+                throw BusinessException.BadRequest(ErrorCode.Concert.SEAT_ALREADY_RESERVED)
+            }
+            seat.updateStatus(SeatStatus.UNAVAILABLE)
+        }
 
         val reservations =
             seats.map { seat ->
@@ -51,8 +58,6 @@ class ReservationManager(
                     )
                 reservationRepository.save(reservation)
             }
-
-        seatRepository.updateAllStatus(reservationRequest.seatIds, SeatStatus.UNAVAILABLE)
 
         return reservations
     }

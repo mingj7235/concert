@@ -8,6 +8,8 @@ interface SeatRepository {
 
     fun findAllById(seatIds: List<Long>): List<Seat>
 
+    fun finaAllByIdWithLock(seatIds: List<Long>): List<Seat>
+
     fun updateAllStatus(
         seatIds: List<Long>,
         status: SeatStatus,

@@ -25,6 +25,7 @@ sealed interface ErrorCode {
         NOT_FOUND(HttpStatus.NOT_FOUND, "CONCERT001", "해당 콘서트를 찾을 수 없습니다."),
         UNAVAILABLE(HttpStatus.BAD_REQUEST, "CONCERT002", "해당 콘서트는 이용이 불가능합니다."),
         SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "CONCERT003", "해당 콘서트의 일정을 찾을 수 없습니다."),
+        SEAT_ALREADY_RESERVED(HttpStatus.BAD_REQUEST, "CONCERT004", "이미 예약된 좌석입니다."),
     }
 
     enum class Balance(
