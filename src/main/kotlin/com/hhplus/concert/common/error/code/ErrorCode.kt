@@ -35,6 +35,7 @@ sealed interface ErrorCode {
     ) : ErrorCode {
         NOT_FOUND(HttpStatus.NOT_FOUND, "BALANCE001", "해당 잔액 정보를 찾을 수 없습니다."),
         BAD_RECHARGE_REQUEST(HttpStatus.BAD_REQUEST, "BALANCE002", "잘못된 잔액 충전 요청입니다."),
+        CONCURRENT_MODIFICATION(HttpStatus.BAD_REQUEST, "BALANCE003", "동시에 여러 충전 요청이 발생했습니다. 잠시 후 다시 시도해주세요."),
     }
 
     enum class Payment(

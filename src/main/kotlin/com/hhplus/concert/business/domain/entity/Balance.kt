@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToOne
+import jakarta.persistence.Version
 import java.time.LocalDateTime
 
 @Entity
@@ -33,6 +34,9 @@ class Balance(
     @Column(name = "last_update_at", nullable = false)
     var lastUpdatedAt: LocalDateTime = lastUpdatedAt
         protected set
+
+    @Version
+    var version: Long = 0
 
     fun updateAmount(amount: Long) {
         this.amount += amount
