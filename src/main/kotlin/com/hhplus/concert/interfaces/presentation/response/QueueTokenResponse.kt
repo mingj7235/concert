@@ -4,7 +4,7 @@ import com.hhplus.concert.business.application.dto.QueueServiceDto
 import com.hhplus.concert.common.type.QueueStatus
 import java.time.LocalDateTime
 
-object QueueTokenResponse {
+class QueueTokenResponse {
     data class Token(
         val token: String,
         val createdAt: LocalDateTime,

@@ -1,17 +1,17 @@
 package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.service.PaymentService
-import com.hhplus.concert.business.domain.manager.payment.PaymentManager
-import com.hhplus.concert.business.domain.manager.queue.QueueManager
-import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
-import com.hhplus.concert.business.domain.manager.user.UserManager
+import com.hhplus.concert.business.domain.entity.Payment
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.entity.User
+import com.hhplus.concert.business.domain.manager.PaymentManager
+import com.hhplus.concert.business.domain.manager.QueueManager
+import com.hhplus.concert.business.domain.manager.ReservationManager
+import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
 import com.hhplus.concert.common.type.QueueStatus
-import com.hhplus.concert.infrastructure.entity.Payment
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.Reservation
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach

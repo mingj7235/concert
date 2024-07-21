@@ -1,8 +1,8 @@
 package com.hhplus.concert.infrastructure.impl
 
+import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Seat
 import com.hhplus.concert.infrastructure.jpa.SeatJpaRepository
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull

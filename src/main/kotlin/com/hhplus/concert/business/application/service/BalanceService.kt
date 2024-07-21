@@ -1,7 +1,7 @@
 package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.BalanceServiceDto
-import com.hhplus.concert.business.domain.manager.balance.BalanceManager
+import com.hhplus.concert.business.domain.manager.BalanceManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import org.springframework.stereotype.Service

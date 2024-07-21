@@ -1,10 +1,10 @@
-package com.hhplus.concert.business.domain.manager.balance
+package com.hhplus.concert.business.domain.manager
 
+import com.hhplus.concert.business.domain.entity.Balance
 import com.hhplus.concert.business.domain.repository.BalanceRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
-import com.hhplus.concert.infrastructure.entity.Balance
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 

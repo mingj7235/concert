@@ -1,5 +1,8 @@
-package com.hhplus.concert.business.domain.manager.concert
+package com.hhplus.concert.business.domain.manager
 
+import com.hhplus.concert.business.domain.entity.Concert
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
+import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
@@ -7,9 +10,6 @@ import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Concert
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
-import com.hhplus.concert.infrastructure.entity.Seat
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 

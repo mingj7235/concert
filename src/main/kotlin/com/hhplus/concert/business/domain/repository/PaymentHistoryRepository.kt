@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.domain.repository
 
-import com.hhplus.concert.infrastructure.entity.PaymentHistory
+import com.hhplus.concert.business.domain.entity.PaymentHistory
 
 interface PaymentHistoryRepository {
     fun save(paymentHistory: PaymentHistory)

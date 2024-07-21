@@ -1,8 +1,8 @@
 package com.hhplus.concert.infrastructure.impl
 
+import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.common.type.QueueStatus
-import com.hhplus.concert.infrastructure.entity.Queue
 import com.hhplus.concert.infrastructure.jpa.QueueJpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime

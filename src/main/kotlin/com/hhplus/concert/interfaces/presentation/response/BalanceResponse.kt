@@ -2,7 +2,7 @@ package com.hhplus.concert.interfaces.presentation.response
 
 import com.hhplus.concert.business.application.dto.BalanceServiceDto
 
-object BalanceResponse {
+class BalanceResponse {
     data class Detail(
         val userId: Long,
         val currentAmount: Long,

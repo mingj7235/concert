@@ -1,10 +1,10 @@
 package com.hhplus.concert.interfaces.scheduler
 
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.type.QueueStatus
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

@@ -1,4 +1,4 @@
-package com.hhplus.concert.common.error.handler
+package com.hhplus.concert.interfaces.presentation.exceptionhandler
 
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException

@@ -4,7 +4,7 @@ import com.hhplus.concert.business.application.dto.ReservationServiceDto
 import com.hhplus.concert.common.type.ReservationStatus
 import java.time.LocalDateTime
 
-object ReservationResponse {
+class ReservationResponse {
     data class Result(
         val reservationId: Long,
         val concertId: Long,

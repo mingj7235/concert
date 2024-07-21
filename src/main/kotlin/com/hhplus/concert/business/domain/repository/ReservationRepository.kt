@@ -1,7 +1,7 @@
 package com.hhplus.concert.business.domain.repository
 
+import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.common.type.ReservationStatus
-import com.hhplus.concert.infrastructure.entity.Reservation
 import java.time.LocalDateTime
 
 interface ReservationRepository {

@@ -3,7 +3,7 @@ package com.hhplus.concert.business.application.dto
 import com.hhplus.concert.common.type.ReservationStatus
 import java.time.LocalDateTime
 
-object ReservationServiceDto {
+class ReservationServiceDto {
     data class Request(
         val userId: Long,
         val concertId: Long,

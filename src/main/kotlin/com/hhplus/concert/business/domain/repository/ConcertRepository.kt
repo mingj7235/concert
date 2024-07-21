@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.domain.repository
 
-import com.hhplus.concert.infrastructure.entity.Concert
+import com.hhplus.concert.business.domain.entity.Concert
 
 interface ConcertRepository {
     fun findById(concertId: Long): Concert?

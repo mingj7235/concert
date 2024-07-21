@@ -1,7 +1,7 @@
 package com.hhplus.concert.infrastructure.impl
 
+import com.hhplus.concert.business.domain.entity.Balance
 import com.hhplus.concert.business.domain.repository.BalanceRepository
-import com.hhplus.concert.infrastructure.entity.Balance
 import com.hhplus.concert.infrastructure.jpa.BalanceJpaRepository
 import org.springframework.stereotype.Repository
 

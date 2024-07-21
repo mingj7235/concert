@@ -1,10 +1,10 @@
 package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.PaymentServiceDto
-import com.hhplus.concert.business.domain.manager.payment.PaymentManager
-import com.hhplus.concert.business.domain.manager.queue.QueueManager
-import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
-import com.hhplus.concert.business.domain.manager.user.UserManager
+import com.hhplus.concert.business.domain.manager.PaymentManager
+import com.hhplus.concert.business.domain.manager.QueueManager
+import com.hhplus.concert.business.domain.manager.ReservationManager
+import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus

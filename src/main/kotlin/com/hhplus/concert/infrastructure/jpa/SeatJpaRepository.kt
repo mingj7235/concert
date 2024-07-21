@@ -1,7 +1,7 @@
 package com.hhplus.concert.infrastructure.jpa
 
+import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Seat
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query

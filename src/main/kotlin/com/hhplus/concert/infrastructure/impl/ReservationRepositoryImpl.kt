@@ -1,8 +1,8 @@
 package com.hhplus.concert.infrastructure.impl
 
+import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.repository.ReservationRepository
 import com.hhplus.concert.common.type.ReservationStatus
-import com.hhplus.concert.infrastructure.entity.Reservation
 import com.hhplus.concert.infrastructure.jpa.ReservationJpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime

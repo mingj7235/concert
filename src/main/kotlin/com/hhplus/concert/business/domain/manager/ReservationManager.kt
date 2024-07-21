@@ -1,6 +1,7 @@
-package com.hhplus.concert.business.domain.manager.reservation
+package com.hhplus.concert.business.domain.manager
 
 import com.hhplus.concert.business.application.dto.ReservationServiceDto
+import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
@@ -10,7 +11,6 @@ import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Reservation
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 

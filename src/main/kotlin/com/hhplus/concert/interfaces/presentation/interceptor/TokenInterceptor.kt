@@ -1,4 +1,4 @@
-package com.hhplus.concert.common.interceptor
+package com.hhplus.concert.interfaces.presentation.interceptor
 
 import com.hhplus.concert.common.annotation.TokenRequired
 import com.hhplus.concert.common.constants.TokenConstants.QUEUE_TOKEN_HEADER

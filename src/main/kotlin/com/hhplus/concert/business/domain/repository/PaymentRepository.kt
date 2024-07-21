@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.domain.repository
 
-import com.hhplus.concert.infrastructure.entity.Payment
+import com.hhplus.concert.business.domain.entity.Payment
 
 interface PaymentRepository {
     fun save(payment: Payment): Payment

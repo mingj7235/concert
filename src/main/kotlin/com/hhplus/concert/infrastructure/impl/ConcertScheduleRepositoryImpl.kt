@@ -1,7 +1,7 @@
 package com.hhplus.concert.infrastructure.impl
 
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
 import com.hhplus.concert.infrastructure.jpa.ConcertScheduleJpaRepository
 import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull

@@ -1,5 +1,10 @@
 package com.hhplus.concert.interfaces.scheduler
 
+import com.hhplus.concert.business.domain.entity.Concert
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
+import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.entity.Seat
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
@@ -8,11 +13,6 @@ import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Concert
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
-import com.hhplus.concert.infrastructure.entity.Reservation
-import com.hhplus.concert.infrastructure.entity.Seat
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,7 +1,7 @@
 package com.hhplus.concert.infrastructure.jpa
 
+import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.common.type.ReservationStatus
-import com.hhplus.concert.infrastructure.entity.Reservation
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query

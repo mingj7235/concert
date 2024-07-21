@@ -3,7 +3,7 @@ package com.hhplus.concert.business.application.dto
 import com.hhplus.concert.common.type.QueueStatus
 import java.time.LocalDateTime
 
-object QueueServiceDto {
+class QueueServiceDto {
     data class IssuedToken(
         val token: String,
         val createdAt: LocalDateTime,

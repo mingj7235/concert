@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.domain.repository
 
-import com.hhplus.concert.infrastructure.entity.Balance
+import com.hhplus.concert.business.domain.entity.Balance
 
 interface BalanceRepository {
     fun findByUserId(userId: Long): Balance?

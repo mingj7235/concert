@@ -1,9 +1,9 @@
-package com.hhplus.concert.business.domain.manager.user
+package com.hhplus.concert.business.domain.manager
 
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
-import com.hhplus.concert.infrastructure.entity.User
 import org.springframework.stereotype.Component
 
 @Component

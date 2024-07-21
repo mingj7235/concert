@@ -1,12 +1,12 @@
-package com.hhplus.concert.business.domain.manager.payment
+package com.hhplus.concert.business.domain.manager
 
+import com.hhplus.concert.business.domain.entity.Payment
+import com.hhplus.concert.business.domain.entity.PaymentHistory
+import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
 import com.hhplus.concert.common.type.PaymentStatus
-import com.hhplus.concert.infrastructure.entity.Payment
-import com.hhplus.concert.infrastructure.entity.PaymentHistory
-import com.hhplus.concert.infrastructure.entity.Reservation
-import com.hhplus.concert.infrastructure.entity.User
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 

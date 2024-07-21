@@ -1,7 +1,7 @@
 package com.hhplus.concert.infrastructure.jpa
 
+import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.common.type.QueueStatus
-import com.hhplus.concert.infrastructure.entity.Queue
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query

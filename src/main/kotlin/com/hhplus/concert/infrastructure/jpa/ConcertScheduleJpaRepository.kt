@@ -1,6 +1,6 @@
 package com.hhplus.concert.infrastructure.jpa
 
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ConcertScheduleJpaRepository : JpaRepository<ConcertSchedule, Long> {

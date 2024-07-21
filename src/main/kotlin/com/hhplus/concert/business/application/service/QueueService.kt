@@ -1,8 +1,8 @@
 package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.QueueServiceDto
-import com.hhplus.concert.business.domain.manager.queue.QueueManager
-import com.hhplus.concert.business.domain.manager.user.UserManager
+import com.hhplus.concert.business.domain.manager.QueueManager
+import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.common.type.QueueStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

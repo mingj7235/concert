@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.application.dto
 
-object BalanceServiceDto {
+class BalanceServiceDto {
     data class Detail(
         val userId: Long,
         val currentAmount: Long,

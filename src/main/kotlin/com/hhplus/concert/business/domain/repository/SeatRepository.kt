@@ -1,7 +1,7 @@
 package com.hhplus.concert.business.domain.repository
 
+import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Seat
 
 interface SeatRepository {
     fun findAllByScheduleId(scheduleId: Long): List<Seat>

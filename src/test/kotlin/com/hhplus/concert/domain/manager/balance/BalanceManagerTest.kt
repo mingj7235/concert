@@ -1,10 +1,10 @@
 package com.hhplus.concert.domain.manager.balance
 
-import com.hhplus.concert.business.domain.manager.balance.BalanceManager
+import com.hhplus.concert.business.domain.entity.Balance
+import com.hhplus.concert.business.domain.entity.User
+import com.hhplus.concert.business.domain.manager.BalanceManager
 import com.hhplus.concert.business.domain.repository.BalanceRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
-import com.hhplus.concert.infrastructure.entity.Balance
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

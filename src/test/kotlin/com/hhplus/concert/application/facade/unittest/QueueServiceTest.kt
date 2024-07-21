@@ -1,14 +1,14 @@
 package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.service.QueueService
-import com.hhplus.concert.business.domain.manager.queue.QueueManager
-import com.hhplus.concert.business.domain.manager.user.UserManager
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.User
+import com.hhplus.concert.business.domain.manager.QueueManager
+import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.domain.manager.queue.QueueManagerTest
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

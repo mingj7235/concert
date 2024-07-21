@@ -1,12 +1,12 @@
-package com.hhplus.concert.business.domain.manager.queue
+package com.hhplus.concert.business.domain.manager
 
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.User
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 

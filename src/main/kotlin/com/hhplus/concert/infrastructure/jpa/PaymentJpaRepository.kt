@@ -1,6 +1,6 @@
 package com.hhplus.concert.infrastructure.jpa
 
-import com.hhplus.concert.infrastructure.entity.Payment
+import com.hhplus.concert.business.domain.entity.Payment
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

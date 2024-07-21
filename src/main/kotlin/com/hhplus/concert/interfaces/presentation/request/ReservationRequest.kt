@@ -2,7 +2,7 @@ package com.hhplus.concert.interfaces.presentation.request
 
 import com.hhplus.concert.business.application.dto.ReservationServiceDto
 
-object ReservationRequest {
+class ReservationRequest {
     data class Detail(
         val userId: Long,
         val concertId: Long,

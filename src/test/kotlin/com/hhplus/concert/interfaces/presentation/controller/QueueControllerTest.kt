@@ -1,12 +1,12 @@
 package com.hhplus.concert.interfaces.presentation.controller
 
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.constants.TokenConstants.QUEUE_TOKEN_HEADER
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

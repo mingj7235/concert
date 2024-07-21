@@ -1,4 +1,4 @@
-package com.hhplus.concert.common.filter
+package com.hhplus.concert.interfaces.presentation.filter
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.domain.repository
 
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
 
 interface ConcertScheduleRepository {
     fun findAllByConcertId(concertId: Long): List<ConcertSchedule>

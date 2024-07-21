@@ -1,6 +1,12 @@
 package com.hhplus.concert.application.facade.integration
 
 import com.hhplus.concert.business.application.service.PaymentService
+import com.hhplus.concert.business.domain.entity.Concert
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.entity.Seat
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
@@ -15,12 +21,6 @@ import com.hhplus.concert.common.type.PaymentStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
-import com.hhplus.concert.infrastructure.entity.Concert
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.Reservation
-import com.hhplus.concert.infrastructure.entity.Seat
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -3,7 +3,7 @@ package com.hhplus.concert.interfaces.presentation.response
 import com.hhplus.concert.business.application.dto.PaymentServiceDto
 import com.hhplus.concert.common.type.PaymentStatus
 
-object PaymentResponse {
+class PaymentResponse {
     data class Result(
         val paymentId: Long,
         val amount: Int,

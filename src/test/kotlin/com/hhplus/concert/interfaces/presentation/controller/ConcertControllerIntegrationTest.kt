@@ -1,5 +1,10 @@
 package com.hhplus.concert.interfaces.presentation.controller
 
+import com.hhplus.concert.business.domain.entity.Concert
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
+import com.hhplus.concert.business.domain.entity.Queue
+import com.hhplus.concert.business.domain.entity.Seat
+import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.QueueRepository
@@ -10,11 +15,6 @@ import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.common.util.JwtUtil
-import com.hhplus.concert.infrastructure.entity.Concert
-import com.hhplus.concert.infrastructure.entity.ConcertSchedule
-import com.hhplus.concert.infrastructure.entity.Queue
-import com.hhplus.concert.infrastructure.entity.Seat
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

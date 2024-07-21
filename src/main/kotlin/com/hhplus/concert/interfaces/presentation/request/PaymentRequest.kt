@@ -1,6 +1,6 @@
 package com.hhplus.concert.interfaces.presentation.request
 
-object PaymentRequest {
+class PaymentRequest {
     data class Detail(
         val reservationIds: List<Long>,
     )

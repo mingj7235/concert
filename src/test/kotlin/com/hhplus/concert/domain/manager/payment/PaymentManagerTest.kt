@@ -1,15 +1,15 @@
 package com.hhplus.concert.domain.manager.payment
 
-import com.hhplus.concert.business.domain.manager.payment.PaymentManager
+import com.hhplus.concert.business.domain.entity.Payment
+import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.entity.Seat
+import com.hhplus.concert.business.domain.entity.User
+import com.hhplus.concert.business.domain.manager.PaymentManager
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
 import com.hhplus.concert.common.type.PaymentStatus
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.domain.manager.reservation.ReservationManagerTest
-import com.hhplus.concert.infrastructure.entity.Payment
-import com.hhplus.concert.infrastructure.entity.Reservation
-import com.hhplus.concert.infrastructure.entity.Seat
-import com.hhplus.concert.infrastructure.entity.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

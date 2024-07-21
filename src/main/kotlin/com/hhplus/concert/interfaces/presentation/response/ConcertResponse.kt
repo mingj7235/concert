@@ -4,7 +4,7 @@ import com.hhplus.concert.business.application.dto.ConcertServiceDto
 import com.hhplus.concert.common.type.SeatStatus
 import java.time.LocalDateTime
 
-object ConcertResponse {
+class ConcertResponse {
     data class Concert(
         val concertId: Long,
         val title: String,

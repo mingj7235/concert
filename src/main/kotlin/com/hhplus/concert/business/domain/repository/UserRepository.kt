@@ -1,6 +1,6 @@
 package com.hhplus.concert.business.domain.repository
 
-import com.hhplus.concert.infrastructure.entity.User
+import com.hhplus.concert.business.domain.entity.User
 
 interface UserRepository {
     fun save(user: User): User
