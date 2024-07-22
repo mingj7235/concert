@@ -8,6 +8,8 @@ import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.dao.PessimisticLockingFailureException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -40,22 +42,30 @@ class ReservationService(
             requestSeatIds = reservationRequest.seatIds,
         )
 
-        return reservationManager
-            .createReservations(reservationRequest)
-            .map {
-                ReservationServiceDto.Result(
-                    reservationId = it.id,
-                    concertId = reservationRequest.concertId,
-                    concertName = it.concertTitle,
-                    concertAt = it.concertAt,
-                    seat =
-                        ReservationServiceDto.Seat(
-                            seatNumber = it.seat.seatNumber,
-                            price = it.seat.seatPrice,
-                        ),
-                    reservationStatus = it.reservationStatus,
-                )
+        return runCatching {
+            reservationManager
+                .createReservations(reservationRequest)
+                .map {
+                    ReservationServiceDto.Result(
+                        reservationId = it.id,
+                        concertId = reservationRequest.concertId,
+                        concertName = it.concertTitle,
+                        concertAt = it.concertAt,
+                        seat =
+                            ReservationServiceDto.Seat(
+                                seatNumber = it.seat.seatNumber,
+                                price = it.seat.seatPrice,
+                            ),
+                        reservationStatus = it.reservationStatus,
+                    )
+                }
+        }.getOrElse { exception ->
+            when (exception) {
+                is PessimisticLockingFailureException, is DataIntegrityViolationException ->
+                    throw BusinessException.BadRequest(ErrorCode.Concert.SEAT_ALREADY_RESERVED)
+                else -> throw exception
             }
+        }
     }
 
     /**

@@ -41,4 +41,8 @@ class Seat(
     @Column(name = "seat_price", nullable = false)
     var seatPrice: Int = seatPrice
         protected set
+
+    fun updateStatus(status: SeatStatus) {
+        this.seatStatus = status
+    }
 }

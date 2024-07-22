@@ -36,25 +36,27 @@ class ReservationManager(
         val concertSchedule =
             concertScheduleRepository.findById(reservationRequest.scheduleId)
                 ?: throw BusinessException.NotFound(ErrorCode.Concert.SCHEDULE_NOT_FOUND)
-        val seats = seatRepository.findAllById(reservationRequest.seatIds)
+        val seats = seatRepository.findAllByIdWithPessimisticLock(reservationRequest.seatIds)
 
-        val reservations =
-            seats.map { seat ->
-                val reservation =
-                    Reservation(
-                        user = user,
-                        concertTitle = concert.title,
-                        concertAt = concertSchedule.concertAt,
-                        seat = seat,
-                        reservationStatus = ReservationStatus.PAYMENT_PENDING,
-                        createdAt = LocalDateTime.now(),
-                    )
-                reservationRepository.save(reservation)
+        seats.forEach { seat ->
+            if (seat.seatStatus != SeatStatus.AVAILABLE) {
+                throw BusinessException.BadRequest(ErrorCode.Concert.SEAT_ALREADY_RESERVED)
             }
+            seat.updateStatus(SeatStatus.UNAVAILABLE)
+        }
 
-        seatRepository.updateAllStatus(reservationRequest.seatIds, SeatStatus.UNAVAILABLE)
-
-        return reservations
+        return seats.map { seat ->
+            val reservation =
+                Reservation(
+                    user = user,
+                    concertTitle = concert.title,
+                    concertAt = concertSchedule.concertAt,
+                    seat = seat,
+                    reservationStatus = ReservationStatus.PAYMENT_PENDING,
+                    createdAt = LocalDateTime.now(),
+                )
+            reservationRepository.save(reservation)
+        }
     }
 
     /**
