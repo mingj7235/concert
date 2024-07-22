@@ -4,6 +4,7 @@ import com.hhplus.concert.business.application.dto.BalanceServiceDto
 import com.hhplus.concert.business.domain.manager.BalanceManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
+import org.springframework.dao.PessimisticLockingFailureException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,16 +25,19 @@ class BalanceService(
     ): BalanceServiceDto.Detail {
         if (amount < 0) throw BusinessException.BadRequest(ErrorCode.Balance.BAD_RECHARGE_REQUEST)
 
-        val rechargedBalance =
-            balanceManager.updateAmount(
+        return runCatching {
+            val rechargedBalance = balanceManager.updateAmount(userId = userId, amount = amount)
+            BalanceServiceDto.Detail(
                 userId = userId,
-                amount = amount,
+                currentAmount = rechargedBalance.amount,
             )
-
-        return BalanceServiceDto.Detail(
-            userId = userId,
-            currentAmount = rechargedBalance.amount,
-        )
+        }.getOrElse { exception ->
+            when (exception) {
+                is PessimisticLockingFailureException ->
+                    throw BusinessException.BadRequest(ErrorCode.Balance.CONCURRENT_MODIFICATION)
+                else -> throw exception
+            }
+        }
     }
 
     /**

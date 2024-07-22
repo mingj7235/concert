@@ -11,5 +11,7 @@ class BalanceRepositoryImpl(
 ) : BalanceRepository {
     override fun findByUserId(userId: Long): Balance? = balanceJpaRepository.findByUserId(userId)
 
+    override fun findByUserIdWithPessimisticLock(userId: Long): Balance? = balanceJpaRepository.findByUserIdWithPessimisticLock(userId)
+
     override fun save(balance: Balance): Balance = balanceJpaRepository.save(balance)
 }

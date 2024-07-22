@@ -18,15 +18,20 @@ class BalanceManager(
         amount: Long,
     ): Balance {
         val user = userRepository.findById(userId) ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND)
-        return balanceRepository.findByUserId(user.id)?.apply {
-            updateAmount(amount)
-        } ?: balanceRepository.save(
-            Balance(
-                user = user,
-                amount = amount,
-                lastUpdatedAt = LocalDateTime.now(),
-            ),
-        )
+        val balance = balanceRepository.findByUserIdWithPessimisticLock(user.id)
+
+        return if (balance != null) {
+            balance.updateAmount(amount)
+            balanceRepository.save(balance)
+        } else {
+            balanceRepository.save(
+                Balance(
+                    user = user,
+                    amount = amount,
+                    lastUpdatedAt = LocalDateTime.now(),
+                ),
+            )
+        }
     }
 
     fun getBalanceByUserId(userId: Long): Balance =
