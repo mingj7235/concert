@@ -96,7 +96,7 @@ class ReservationServiceIntegrationTest {
             )
 
         // when
-        val result = reservationService.createReservations(token, reservationRequest)
+        val result = reservationService.createReservationsWithLock(token, reservationRequest)
 
         // then
         assertEquals(1, result.size)
@@ -163,7 +163,7 @@ class ReservationServiceIntegrationTest {
 
         // when & then
         assertThrows<BusinessException.NotFound> {
-            reservationService.createReservations(token, reservationRequest)
+            reservationService.createReservationsWithLock(token, reservationRequest)
         }
     }
 
@@ -192,7 +192,7 @@ class ReservationServiceIntegrationTest {
 
         // when & then
         assertThrows<BusinessException.NotFound> {
-            reservationService.createReservations(token, reservationRequest)
+            reservationService.createReservationsWithLock(token, reservationRequest)
         }
     }
 
@@ -230,7 +230,7 @@ class ReservationServiceIntegrationTest {
 
         // when & then
         assertThrows<BusinessException.NotFound> {
-            reservationService.createReservations(token, reservationRequest)
+            reservationService.createReservationsWithLock(token, reservationRequest)
         }
     }
 
@@ -392,7 +392,7 @@ class ReservationServiceIntegrationTest {
             )
 
         // when
-        val result = reservationService.createReservations(token, reservationRequest)
+        val result = reservationService.createReservationsWithLock(token, reservationRequest)
 
         // then
         assertEquals(2, result.size)
