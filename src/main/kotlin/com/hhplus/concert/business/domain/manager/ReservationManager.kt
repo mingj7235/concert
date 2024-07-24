@@ -12,6 +12,7 @@ import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Component
@@ -26,6 +27,7 @@ class ReservationManager(
      * 1. Reservation 을 PaymentPending 상태로 생성한다.
      * 2. 좌석 상태를 Unavailable 로 변경한다.
      */
+    @Transactional
     fun createReservations(reservationRequest: ReservationServiceDto.Request): List<Reservation> {
         val user =
             userRepository.findById(reservationRequest.userId)
