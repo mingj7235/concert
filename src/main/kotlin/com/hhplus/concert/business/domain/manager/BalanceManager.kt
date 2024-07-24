@@ -6,6 +6,7 @@ import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Component
@@ -13,6 +14,7 @@ class BalanceManager(
     private val userRepository: UserRepository,
     private val balanceRepository: BalanceRepository,
 ) {
+    @Transactional
     fun updateAmount(
         userId: Long,
         amount: Long,
