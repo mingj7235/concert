@@ -6,13 +6,12 @@ import com.hhplus.concert.common.error.exception.BusinessException
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
-import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
 
 @Aspect
 @Component
 class DistributedSpinLockAspect(
-    private val redisTemplate: RedisTemplate<String, String>,
+    private val redisSpinLock: RedisSpinLock,
 ) {
     @Around("@annotation(com.hhplus.concert.common.annotation.DistributedSpinLock)")
     fun around(
@@ -20,24 +19,20 @@ class DistributedSpinLockAspect(
         distributedSpinLock: DistributedSpinLock,
     ): Any? {
         val key = distributedSpinLock.key
-        val startTime = System.currentTimeMillis()
-        val endTime = startTime + distributedSpinLock.timeUnit.toMillis(distributedSpinLock.waitTime)
 
-        while (System.currentTimeMillis() < endTime) {
-            val lockAcquired =
-                redisTemplate
-                    .opsForValue()
-                    .setIfAbsent(key, "locked", distributedSpinLock.leaseTime, distributedSpinLock.timeUnit)
-
-            if (lockAcquired == true) {
-                try {
-                    return joinPoint.proceed()
-                } finally {
-                    redisTemplate.delete(key)
-                }
+        if (redisSpinLock.tryLock(
+                key,
+                distributedSpinLock.leaseTime,
+                distributedSpinLock.timeUnit,
+                distributedSpinLock.waitTime,
+                distributedSpinLock.spinTime,
+            )
+        ) {
+            try {
+                return joinPoint.proceed()
+            } finally {
+                val released = redisSpinLock.releaseLock(key)
             }
-
-            Thread.sleep(distributedSpinLock.spinTime)
         }
 
         throw BusinessException.BadRequest(ErrorCode.Common.BAD_REQUEST)
