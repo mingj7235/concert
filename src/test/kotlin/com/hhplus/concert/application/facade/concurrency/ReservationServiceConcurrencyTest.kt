@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.Duration
 import java.time.LocalDateTime
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
@@ -114,7 +115,7 @@ class ReservationServiceConcurrencyTest {
         val latch = CountDownLatch(numberOfUsers)
         val successCount = AtomicInteger(0)
         val failCount = AtomicInteger(0)
-
+        val startTime = System.nanoTime()
         repeat(numberOfUsers) { index ->
             executorService.submit {
                 val userId = userIds[index]
@@ -144,11 +145,15 @@ class ReservationServiceConcurrencyTest {
 
         latch.await() // 모든 스레드가 작업을 마칠 때까지 대기
 
+        val endTime = System.nanoTime()
+        val duration = Duration.ofNanos(endTime - startTime)
+
         assertEquals(1, successCount.get(), "오직 한 명의 사용자만 예약에 성공해야 합니다")
         assertEquals(999, failCount.get(), "999명의 사용자는 예약에 실패해야 합니다")
 
         // 좌석 상태 확인
         val reservedSeat = seatRepository.findById(seatId)!!
         assertEquals(SeatStatus.UNAVAILABLE, reservedSeat.seatStatus, "예약된 좌석의 상태는 UNAVAILABLE이어야 합니다")
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
     }
 }

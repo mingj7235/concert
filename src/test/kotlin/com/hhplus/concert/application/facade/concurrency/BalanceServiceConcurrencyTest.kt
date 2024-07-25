@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -39,9 +40,10 @@ class BalanceServiceConcurrencyTest {
 
     @Test
     fun `동시에 여러 충전 요청이 들어와도 한 번만 충전되어야 한다`() {
+        val startTime = System.nanoTime()
         // Given
         val userId = 1L
-        val rechargeAmount = 500L
+        val rechargeAmount = 1000L
         val numberOfThreads = 1000
 
         // 초기 잔액 설정
@@ -64,6 +66,8 @@ class BalanceServiceConcurrencyTest {
 
         executorService.shutdown()
         executorService.awaitTermination(10, TimeUnit.SECONDS)
+        val endTime = System.nanoTime()
+        val duration = Duration.ofNanos(endTime - startTime)
 
         // Then
         val finalBalance = balanceRepository.findByUserId(userId)?.amount ?: 0L
@@ -71,5 +75,7 @@ class BalanceServiceConcurrencyTest {
         assertEquals(1, successfulRecharges.get(), "오직 한 번의 충전만 성공해야 한다.")
         assertEquals(999, failedRecharges.get(), "나머지는 모두 실패한다.")
         assertEquals(rechargeAmount, finalBalance, "최종 잔액은 초기 잔액 + 1회 충전액이어야 한다.")
+        println("최종 잔액 : $finalBalance")
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
     }
 }
