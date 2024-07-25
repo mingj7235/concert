@@ -18,7 +18,6 @@ class BalanceService(
      * - user 는 존재하지만 balance 가 없다면 생성하고 충전한다.
      * - balance 가 존재한다면, 현재 금액에 요청된 금액을 더한다.
      */
-    @Transactional
     fun recharge(
         userId: Long,
         amount: Long,

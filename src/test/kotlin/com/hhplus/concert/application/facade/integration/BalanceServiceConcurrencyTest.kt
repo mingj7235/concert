@@ -5,6 +5,7 @@ import com.hhplus.concert.business.domain.entity.Balance
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.BalanceRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,25 +26,25 @@ class BalanceServiceConcurrencyTest {
     @Autowired
     private lateinit var balanceRepository: BalanceRepository
 
+    /**
+     * 동시에 많은 요청이 들어온다면 낙관적락은 적합하지 않다.
+     */
     @Test
-    fun `10개의 동시 충전 요청 중 하나만 성공해야 한다`() {
+    fun `1000개의 동시 충전 요청이 오면 수차적으로 모두 성공해야 한다`() {
         // Given
         val user = userRepository.save(User(name = "Test User"))
         balanceRepository.save(
             Balance(
                 user = user,
-                amount = 1000,
+                amount = 100,
                 lastUpdatedAt = LocalDateTime.now(),
             ),
         )
 
-        val threadCount = 10
+        val threadCount = 1000
         val executorService = Executors.newFixedThreadPool(threadCount)
         val latch = CountDownLatch(threadCount)
         val rechargeAmount = 100L
-
-        val successfulRecharges = AtomicInteger(0)
-        val failedRecharges = AtomicInteger(0)
 
         // When
         repeat(threadCount) {
@@ -51,10 +52,6 @@ class BalanceServiceConcurrencyTest {
                 try {
                     runCatching {
                         balanceService.recharge(user.id, rechargeAmount)
-                    }.onSuccess {
-                        successfulRecharges.incrementAndGet()
-                    }.onFailure {
-                        failedRecharges.incrementAndGet()
                     }
                 } finally {
                     latch.countDown()
@@ -65,9 +62,6 @@ class BalanceServiceConcurrencyTest {
 
         // Then
         val finalBalance = balanceRepository.findByUserId(user.id)
-
-        assertEquals(1, successfulRecharges.get(), "1개의 충전만 성공해야 합니다.")
-        assertEquals(9, failedRecharges.get(), "9개의 충전은 실패해야 합니다.")
-        assertEquals(1100L, finalBalance?.amount, "최종 잔액은 1100이어야 합니다.")
+        assertEquals(101000L, finalBalance?.amount, "최종 잔액은 101000이어야 합니다.")
     }
 }

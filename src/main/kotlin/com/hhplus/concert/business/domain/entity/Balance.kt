@@ -38,8 +38,9 @@ class Balance(
     @Version
     var version: Long = 0
 
-    fun updateAmount(amount: Long) {
+    fun updateAmount(amount: Long): Balance {
         this.amount += amount
         this.lastUpdatedAt = LocalDateTime.now()
+        return this
     }
 }

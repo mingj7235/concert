@@ -11,6 +11,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         hbm2ddl:
           auto: create-drop
+        show_sql: true
 
 jwt:
   secret: concert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secret

@@ -27,7 +27,6 @@ class ReservationService(
      * 3. reservation 을 생성한다.
      * 4. 예약이 완료되면 좌석의 상태를 UNAVAILABLE 로 변경한다.
      */
-    @Transactional
     fun createReservations(
         token: String,
         reservationRequest: ReservationServiceDto.Request,
