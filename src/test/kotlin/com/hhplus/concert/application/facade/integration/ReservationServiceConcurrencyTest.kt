@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -48,7 +49,7 @@ class ReservationServiceConcurrencyTest {
     @Test
     fun `1000개의 동시 예약 요청 중 하나만 성공해야 한다`() {
         // Given
-
+        val startTime = System.nanoTime()
         val concert =
             concertRepository.save(
                 Concert(
@@ -115,6 +116,9 @@ class ReservationServiceConcurrencyTest {
         }
         latch.await()
 
+        val endTime = System.nanoTime()
+        val duration = Duration.ofNanos(endTime - startTime)
+
         // Then
         assertEquals(1, successfulReservations.size, "1개의 예약만 성공해야 합니다.")
         assertEquals(999, failedReservations.size, "999개의 예약은 실패해야 합니다.")
@@ -122,5 +126,6 @@ class ReservationServiceConcurrencyTest {
 
         val updatedSeat = seatRepository.findById(seat.id)!!
         assertEquals(SeatStatus.UNAVAILABLE, updatedSeat.seatStatus, "좌석 상태가 UNAVAILABLE로 변경되어야 합니다.")
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
     }
 }

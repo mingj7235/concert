@@ -12,7 +12,7 @@ interface SeatJpaRepository : JpaRepository<Seat, Long> {
     @Query("select seat from Seat seat where seat.concertSchedule.id = :scheduleId")
     fun findAllByScheduleId(scheduleId: Long): List<Seat>
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("SELECT s FROM Seat s WHERE s.id IN :seatIds")
     fun findAllByIdWithPessimisticLock(seatIds: List<Long>): List<Seat>
 
