@@ -1,4 +1,4 @@
-package com.hhplus.concert.business.domain.manager
+package com.hhplus.concert.business.domain.manager.reservation
 
 import com.hhplus.concert.business.application.dto.ReservationServiceDto
 import com.hhplus.concert.business.domain.entity.Reservation
@@ -12,6 +12,7 @@ import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Component
@@ -26,6 +27,7 @@ class ReservationManager(
      * 1. Reservation 을 PaymentPending 상태로 생성한다.
      * 2. 좌석 상태를 Unavailable 로 변경한다.
      */
+    @Transactional
     fun createReservations(reservationRequest: ReservationServiceDto.Request): List<Reservation> {
         val user =
             userRepository.findById(reservationRequest.userId)
@@ -36,7 +38,7 @@ class ReservationManager(
         val concertSchedule =
             concertScheduleRepository.findById(reservationRequest.scheduleId)
                 ?: throw BusinessException.NotFound(ErrorCode.Concert.SCHEDULE_NOT_FOUND)
-        val seats = seatRepository.findAllById(reservationRequest.seatIds)
+        val seats = seatRepository.findAllByIdAndStatusWithPessimisticLock(reservationRequest.seatIds, SeatStatus.AVAILABLE)
 
         val reservations =
             seats.map { seat ->
