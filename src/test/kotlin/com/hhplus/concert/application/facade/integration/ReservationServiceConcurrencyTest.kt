@@ -46,7 +46,7 @@ class ReservationServiceConcurrencyTest {
     private lateinit var queueRepository: QueueRepository
 
     @Test
-    fun `10개의 동시 예약 요청 중 하나만 성공해야 한다`() {
+    fun `1000개의 동시 예약 요청 중 하나만 성공해야 한다`() {
         // Given
 
         val concert =
@@ -70,7 +70,7 @@ class ReservationServiceConcurrencyTest {
                 Seat(schedule, 1, SeatStatus.AVAILABLE, 10000),
             )
 
-        val threadCount = 10
+        val threadCount = 1000
         val executorService = Executors.newFixedThreadPool(threadCount)
         val latch = CountDownLatch(threadCount)
 
@@ -117,7 +117,7 @@ class ReservationServiceConcurrencyTest {
 
         // Then
         assertEquals(1, successfulReservations.size, "1개의 예약만 성공해야 합니다.")
-        assertEquals(9, failedReservations.size, "9개의 예약은 실패해야 합니다.")
+        assertEquals(999, failedReservations.size, "999개의 예약은 실패해야 합니다.")
         assertTrue(failedReservations.all { it is BusinessException.BadRequest }, "실패한 예약들은 모두 BusinessException.Conflict 예외여야 합니다.")
 
         val updatedSeat = seatRepository.findById(seat.id)!!
