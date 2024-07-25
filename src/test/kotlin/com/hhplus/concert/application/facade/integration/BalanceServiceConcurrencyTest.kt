@@ -1,6 +1,6 @@
 package com.hhplus.concert.application.facade.integration
 
-import com.hhplus.concert.business.application.service.BalanceService
+import com.hhplus.concert.business.application.service.BalanceLockService
 import com.hhplus.concert.business.domain.entity.Balance
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.BalanceRepository
@@ -21,7 +21,7 @@ import kotlin.system.measureTimeMillis
 @SpringBootTest
 class BalanceServiceConcurrencyTest {
     @Autowired
-    private lateinit var balanceService: BalanceService
+    private lateinit var balanceService: BalanceLockService
 
     @Autowired
     private lateinit var balanceRepository: BalanceRepository

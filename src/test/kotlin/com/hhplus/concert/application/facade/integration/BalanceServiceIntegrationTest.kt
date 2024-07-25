@@ -1,5 +1,6 @@
 package com.hhplus.concert.application.facade.integration
 
+import com.hhplus.concert.business.application.service.BalanceLockService
 import com.hhplus.concert.business.application.service.BalanceService
 import com.hhplus.concert.business.domain.entity.Balance
 import com.hhplus.concert.business.domain.entity.User
@@ -22,6 +23,9 @@ class BalanceServiceIntegrationTest {
     private lateinit var balanceService: BalanceService
 
     @Autowired
+    private lateinit var balanceLockService: BalanceLockService
+
+    @Autowired
     private lateinit var userRepository: UserRepository
 
     @Autowired
@@ -33,7 +37,7 @@ class BalanceServiceIntegrationTest {
         val user = userRepository.save(User(name = "Test User"))
 
         // when
-        val result = balanceService.recharge(user.id, 10000)
+        val result = balanceLockService.recharge(user.id, 10000)
 
         // then
         assertEquals(user.id, result.userId)
@@ -51,7 +55,7 @@ class BalanceServiceIntegrationTest {
         balanceRepository.save(Balance(user = user, amount = 5000, lastUpdatedAt = LocalDateTime.now()))
 
         // when
-        val result = balanceService.recharge(user.id, 3000)
+        val result = balanceLockService.recharge(user.id, 3000)
 
         // then
         assertEquals(user.id, result.userId)
@@ -69,7 +73,7 @@ class BalanceServiceIntegrationTest {
 
         // when & then
         assertThrows<BusinessException.NotFound> {
-            balanceService.recharge(nonExistentUserId, 10000)
+            balanceLockService.recharge(nonExistentUserId, 10000)
         }
     }
 
@@ -79,7 +83,7 @@ class BalanceServiceIntegrationTest {
         val user = userRepository.save(User(name = "Test User"))
 
         // when
-        val result = balanceService.recharge(user.id, 0)
+        val result = balanceLockService.recharge(user.id, 0)
 
         // then
         assertEquals(user.id, result.userId)
@@ -96,7 +100,7 @@ class BalanceServiceIntegrationTest {
         val user = userRepository.save(User(name = "Test User"))
 
         // when
-        val result = balanceService.recharge(user.id, 1_000_000_000) // 10억원
+        val result = balanceLockService.recharge(user.id, 1_000_000_000) // 10억원
 
         // then
         assertEquals(user.id, result.userId)
@@ -113,9 +117,9 @@ class BalanceServiceIntegrationTest {
         val user = userRepository.save(User(name = "Test User"))
 
         // when
-        balanceService.recharge(user.id, 1000)
-        balanceService.recharge(user.id, 2000)
-        val result = balanceService.recharge(user.id, 3000)
+        balanceLockService.recharge(user.id, 1000)
+        balanceLockService.recharge(user.id, 2000)
+        val result = balanceLockService.recharge(user.id, 3000)
 
         // then
         assertEquals(user.id, result.userId)
