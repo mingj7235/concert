@@ -118,7 +118,7 @@ class ReservationServiceConcurrencyTest {
         // Then
         assertEquals(1, successfulReservations.size, "1개의 예약만 성공해야 합니다.")
         assertEquals(999, failedReservations.size, "999개의 예약은 실패해야 합니다.")
-        assertTrue(failedReservations.all { it is BusinessException.BadRequest }, "실패한 예약들은 모두 BusinessException.Conflict 예외여야 합니다.")
+        assertTrue(failedReservations.all { it is BusinessException.BadRequest }, "실패한 예약들은 모두 BusinessException.BadRequest 예외여야 합니다.")
 
         val updatedSeat = seatRepository.findById(seat.id)!!
         assertEquals(SeatStatus.UNAVAILABLE, updatedSeat.seatStatus, "좌석 상태가 UNAVAILABLE로 변경되어야 합니다.")
