@@ -18,9 +18,6 @@ class BalanceService(
      * - balance 가 존재한다면, 현재 금액에 요청된 금액을 더한다.
      */
 
-    @DistributedSpinLock(
-        key = "'user:' + #userId",
-    )
     fun recharge(
         userId: Long,
         amount: Long,
@@ -33,6 +30,9 @@ class BalanceService(
         )
     }
 
+    @DistributedSpinLock(
+        key = "'user:' + #userId",
+    )
     fun rechargeWithSimpleLock(
         userId: Long,
         amount: Long,
