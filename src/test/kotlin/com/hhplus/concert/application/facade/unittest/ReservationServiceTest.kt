@@ -10,8 +10,9 @@ import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.manager.ConcertManager
 import com.hhplus.concert.business.domain.manager.QueueManager
-import com.hhplus.concert.business.domain.manager.ReservationManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.reservation.ReservationLockManager
+import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
@@ -45,6 +46,9 @@ class ReservationServiceTest {
     @Mock
     private lateinit var reservationManager: ReservationManager
 
+    @Mock
+    private lateinit var reservationLockManager: ReservationLockManager
+
     @InjectMocks
     private lateinit var reservationService: ReservationService
 
@@ -76,7 +80,7 @@ class ReservationServiceTest {
         `when`(queueManager.findByToken(token)).thenReturn(queue)
         `when`(userManager.findById(request.userId)).thenReturn(user)
         `when`(concertManager.getAvailableSeats(request.concertId, request.scheduleId)).thenReturn(availableSeats)
-        `when`(reservationManager.createReservations(request)).thenReturn(createdReservations)
+        `when`(reservationLockManager.createReservations(request)).thenReturn(createdReservations)
 
         // When
         val result = reservationService.createReservations(token, request)
@@ -88,7 +92,7 @@ class ReservationServiceTest {
         verify(queueManager).findByToken(token)
         verify(userManager).findById(request.userId)
         verify(concertManager).getAvailableSeats(request.concertId, request.scheduleId)
-        verify(reservationManager).createReservations(request)
+        verify(reservationLockManager).createReservations(request)
     }
 
     @Test

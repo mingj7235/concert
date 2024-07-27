@@ -6,7 +6,7 @@ import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.manager.ReservationManager
+import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
@@ -70,7 +70,7 @@ class ReservationManagerTest {
         `when`(userRepository.findById(userId)).thenReturn(user)
         `when`(concertRepository.findById(concertId)).thenReturn(concert)
         `when`(concertScheduleRepository.findById(scheduleId)).thenReturn(concertSchedule)
-        `when`(seatRepository.findAllById(seatIds)).thenReturn(seats)
+        `when`(seatRepository.findAllByIdAndStatusWithPessimisticLock(seatIds, SeatStatus.AVAILABLE)).thenReturn(seats)
 
         // When
         val result = reservationManager.createReservations(request)

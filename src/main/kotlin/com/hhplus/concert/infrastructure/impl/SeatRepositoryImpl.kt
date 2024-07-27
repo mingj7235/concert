@@ -15,6 +15,11 @@ class SeatRepositoryImpl(
 
     override fun findAllById(seatIds: List<Long>): List<Seat> = seatJpaRepository.findAllById(seatIds)
 
+    override fun findAllByIdAndStatusWithPessimisticLock(
+        seatIds: List<Long>,
+        seatStatus: SeatStatus,
+    ): List<Seat> = seatJpaRepository.findAllByIdAndStatusWithPessimisticLock(seatIds, seatStatus)
+
     override fun updateAllStatus(
         seatIds: List<Long>,
         status: SeatStatus,

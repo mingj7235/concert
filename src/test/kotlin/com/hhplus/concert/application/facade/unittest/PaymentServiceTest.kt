@@ -7,8 +7,8 @@ import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.manager.PaymentManager
 import com.hhplus.concert.business.domain.manager.QueueManager
-import com.hhplus.concert.business.domain.manager.ReservationManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
 import com.hhplus.concert.common.type.QueueStatus
