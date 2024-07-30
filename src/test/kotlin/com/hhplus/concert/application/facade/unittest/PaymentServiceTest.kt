@@ -8,6 +8,8 @@ import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.manager.PaymentManager
 import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertCacheManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
@@ -36,6 +38,12 @@ class PaymentServiceTest {
     @Mock
     private lateinit var queueManager: QueueManager
 
+    @Mock
+    private lateinit var concertManager: ConcertManager
+
+    @Mock
+    private lateinit var concertCacheManager: ConcertCacheManager
+
     @InjectMocks
     private lateinit var paymentService: PaymentService
 
@@ -63,7 +71,7 @@ class PaymentServiceTest {
         `when`(reservation1.user).thenReturn(user)
         `when`(reservation2.user).thenReturn(user)
         `when`(user.id).thenReturn(userId)
-        `when`(paymentManager.execute(user, listOf(reservation1, reservation2))).thenReturn(listOf(payment1, payment2))
+        `when`(paymentManager.executeAndSaveHistory(user, listOf(reservation1, reservation2))).thenReturn(listOf(payment1, payment2))
         `when`(queueManager.findByToken(token)).thenReturn(queue)
 
         `when`(payment1.id).thenReturn(1L)
@@ -85,7 +93,6 @@ class PaymentServiceTest {
         assertEquals(20000, result[1].amount)
         assertEquals(PaymentStatus.COMPLETED, result[1].paymentStatus)
 
-        verify(paymentManager).saveHistory(user, listOf(payment1, payment2))
         verify(reservationManager).complete(listOf(reservation1, reservation2))
         verify(queueManager).updateStatus(queue, QueueStatus.COMPLETED)
     }

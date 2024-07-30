@@ -48,7 +48,7 @@ class PaymentManagerTest {
         `when`(paymentRepository.save(PAYMENT1)).thenReturn(PAYMENT1)
 
         // When
-        val result = paymentManager.execute(user, listOf(reservation1, reservation2))
+        val result = paymentManager.executeAndSaveHistory(user, listOf(reservation1, reservation2))
 
         // Then
         assertEquals(2, result.size)
@@ -77,7 +77,7 @@ class PaymentManagerTest {
             )
 
         // When
-        val result = paymentManager.execute(user, listOf(reservation1))
+        val result = paymentManager.executeAndSaveHistory(user, listOf(reservation1))
 
         // Then
         assertEquals(1, result.size)
@@ -102,7 +102,7 @@ class PaymentManagerTest {
             .thenAnswer { it.arguments[0] }
 
         // When
-        val result = paymentManager.execute(user, listOf(reservation1, reservation2))
+        val result = paymentManager.executeAndSaveHistory(user, listOf(reservation1, reservation2))
 
         // Then
         assertEquals(2, result.size)
