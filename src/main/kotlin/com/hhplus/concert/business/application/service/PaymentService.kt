@@ -1,13 +1,17 @@
 package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.PaymentServiceDto
+import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.manager.ConcertManager
 import com.hhplus.concert.business.domain.manager.PaymentManager
 import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
+import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
+import com.hhplus.concert.common.type.SeatStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,6 +21,7 @@ class PaymentService(
     private val reservationManager: ReservationManager,
     private val paymentManager: PaymentManager,
     private val queueManager: QueueManager,
+    private val concertManager: ConcertManager,
 ) {
     /**
      * 결제를 진행한다.
@@ -58,6 +63,9 @@ class PaymentService(
         val queue = queueManager.findByToken(token)
         queueManager.updateStatus(queue, QueueStatus.COMPLETED)
 
+        // 결제 완료 후, 해당 Concert 의 좌석이 모두 매진이라면, Concert 의 상태를 UNAVAILABLE 로 변경한다.
+        updateConcertStatusToUnavailable(requestReservations)
+
         // 결과를 반환한다.
         return executedPayments.map {
             PaymentServiceDto.Result(
@@ -65,6 +73,19 @@ class PaymentService(
                 amount = it.amount,
                 paymentStatus = it.paymentStatus,
             )
+        }
+    }
+
+    // 예약정보에 있는 콘서트의 좌석이 모두 UNAVAILABLE 일 경우, 콘서트의 상태를 UNAVAILABLE 으로 변경한다.
+    private fun updateConcertStatusToUnavailable(reservations: List<Reservation>) {
+        val concertSchedules = reservations.map { it.seat.concertSchedule }.distinct()
+
+        for (schedule in concertSchedules) {
+            val allSeats = concertManager.findAllByScheduleId(schedule.id)
+            if (allSeats.all { it.seatStatus == SeatStatus.UNAVAILABLE }) {
+                val concert = schedule.concert
+                concertManager.updateStatus(concert, ConcertStatus.UNAVAILABLE)
+            }
         }
     }
 }

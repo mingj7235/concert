@@ -31,4 +31,8 @@ class Concert(
     @Enumerated(EnumType.STRING)
     var concertStatus: ConcertStatus = concertStatus
         protected set
+
+    fun updateStatus(status: ConcertStatus) {
+        this.concertStatus = status
+    }
 }

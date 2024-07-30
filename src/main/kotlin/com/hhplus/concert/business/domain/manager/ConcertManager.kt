@@ -83,4 +83,13 @@ class ConcertManager(
         val now = LocalDateTime.now()
         return now.isAfter(reservationAvailableAt) && now.isBefore(concertAt)
     }
+
+    fun findAllByScheduleId(scheduleId: Long): List<Seat> = seatRepository.findAllByScheduleId(scheduleId)
+
+    fun updateStatus(
+        concert: Concert,
+        status: ConcertStatus,
+    ) {
+        concert.updateStatus(status)
+    }
 }
