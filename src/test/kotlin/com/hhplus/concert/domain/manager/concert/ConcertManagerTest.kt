@@ -3,7 +3,7 @@ package com.hhplus.concert.domain.manager.concert
 import com.hhplus.concert.business.domain.entity.Concert
 import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import com.hhplus.concert.business.domain.entity.Seat
-import com.hhplus.concert.business.domain.manager.ConcertManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository

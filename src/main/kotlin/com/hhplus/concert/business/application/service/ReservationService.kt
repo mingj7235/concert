@@ -1,9 +1,9 @@
 package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.ReservationServiceDto
-import com.hhplus.concert.business.domain.manager.ConcertManager
 import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationLockManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.code.ErrorCode

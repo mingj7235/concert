@@ -6,8 +6,8 @@ import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.manager.ConcertManager
 import com.hhplus.concert.business.domain.manager.QueueManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
