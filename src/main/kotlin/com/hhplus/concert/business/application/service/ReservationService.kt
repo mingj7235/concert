@@ -1,9 +1,9 @@
 package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.ReservationServiceDto
-import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationLockManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.code.ErrorCode
@@ -70,8 +70,7 @@ class ReservationService(
     }
 
     private fun validateQueueStatus(token: String) {
-        val queue = queueManager.findByToken(token)
-        if (queue.queueStatus != QueueStatus.PROCESSING) throw BusinessException.BadRequest(ErrorCode.Queue.NOT_ALLOWED)
+        if (queueManager.getQueueStatus(token) != QueueStatus.PROCESSING) throw BusinessException.BadRequest(ErrorCode.Queue.NOT_ALLOWED)
     }
 
     private fun validateReservationRequest(

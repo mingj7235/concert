@@ -14,7 +14,7 @@ class QueueScheduler(
     @Scheduled(fixedRate = 60000)
     fun maintainProcessingCount() {
         logger.info("Maintain Processing Scheduler Executed")
-        queueService.maintainProcessingCount()
+        queueService.updateToProcessingTokens()
     }
 
     @Scheduled(fixedRate = 60000)
