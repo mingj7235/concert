@@ -9,7 +9,6 @@ import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
-import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.error.exception.BusinessException

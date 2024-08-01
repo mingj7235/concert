@@ -3,7 +3,6 @@ package com.hhplus.concert.application.facade.integration
 import com.hhplus.concert.business.application.service.PaymentService
 import com.hhplus.concert.business.domain.entity.Concert
 import com.hhplus.concert.business.domain.entity.ConcertSchedule
-import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
@@ -11,16 +10,15 @@ import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
-import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.business.domain.repository.ReservationRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.PaymentStatus
-import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
+import com.hhplus.concert.infrastructure.redis.QueueRedisRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -39,7 +37,7 @@ class PaymentServiceIntegrationTest {
     private lateinit var userRepository: UserRepository
 
     @Autowired
-    private lateinit var queueRepository: QueueRepository
+    private lateinit var queueRedisRepository: QueueRedisRepository
 
     @Autowired
     private lateinit var concertRepository: ConcertRepository
@@ -64,15 +62,11 @@ class PaymentServiceIntegrationTest {
         // given
         val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        val queue =
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
-            )
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
+        )
 
         val concert =
             concertRepository.save(
@@ -122,9 +116,6 @@ class PaymentServiceIntegrationTest {
 
         val updatedReservation = reservationRepository.findById(reservation.id)
         assertEquals(ReservationStatus.PAYMENT_COMPLETED, updatedReservation!!.reservationStatus)
-
-        val updatedQueue = queueRepository.findById(queue!!.id)
-        assertEquals(QueueStatus.COMPLETED, updatedQueue!!.queueStatus)
     }
 
     @Test
@@ -133,13 +124,10 @@ class PaymentServiceIntegrationTest {
         val user1 = userRepository.save(User(name = "User 1"))
         val user2 = userRepository.save(User(name = "User 2"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user1,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user1.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val reservation =
@@ -187,13 +175,10 @@ class PaymentServiceIntegrationTest {
         // given
         val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val nonExistentReservationId = 99999L
@@ -209,15 +194,11 @@ class PaymentServiceIntegrationTest {
         // given
         val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        val queue =
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
-            )
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
+        )
 
         val concert =
             concertRepository.save(
@@ -289,8 +270,5 @@ class PaymentServiceIntegrationTest {
 
         val updatedReservations = reservationRepository.findAllById(listOf(reservation1.id, reservation2.id))
         updatedReservations.forEach { assertEquals(ReservationStatus.PAYMENT_COMPLETED, it.reservationStatus) }
-
-        val updatedQueue = queueRepository.findById(queue!!.id)
-        assertEquals(QueueStatus.COMPLETED, updatedQueue!!.queueStatus)
     }
 }

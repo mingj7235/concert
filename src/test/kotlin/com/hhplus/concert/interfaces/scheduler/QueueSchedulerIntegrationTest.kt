@@ -2,7 +2,6 @@ package com.hhplus.concert.interfaces.scheduler
 
 import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.type.QueueStatus
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,9 +20,6 @@ import java.time.LocalDateTime
 class QueueSchedulerIntegrationTest {
     @Autowired
     private lateinit var queueScheduler: QueueScheduler
-
-    @Autowired
-    private lateinit var queueRepository: QueueRepository
 
     @Autowired
     private lateinit var userRepository: UserRepository
