@@ -20,7 +20,7 @@ class ConcertService(
      * 2. 현재 예약이 가능한 전체 concert 리스트를 dto 로 변환하여 리턴한다.
      */
     @Cacheable(
-        cacheNames = [CacheConfig.ONE_MIN_CACHE],
+        cacheNames = [CacheConfig.FIVE_MIN_CACHE],
         key = "'available-concert'",
         condition = "#token != null",
         sync = true,
@@ -44,7 +44,7 @@ class ConcertService(
      * 3. dto 형태로 변환하여 리턴한다.
      */
     @Cacheable(
-        cacheNames = [CacheConfig.FIVE_MIN_CACHE],
+        cacheNames = [CacheConfig.ONE_MIN_CACHE],
         key = "'concert-' + #concertId",
         condition = "#token != null && #concertId != null",
         sync = true,
