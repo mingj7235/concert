@@ -48,7 +48,7 @@ class QueueManagerTest {
             // then
             assertThat(result).isEqualTo(TOKEN)
             verify(jwtUtil).generateToken(userId)
-            verify(queueRedisRepository).addToWaitingQueue(TOKEN, userId.toString(), System.currentTimeMillis().toDouble())
+            verify(queueRedisRepository).addToWaitingQueue(TOKEN, userId.toString(), System.currentTimeMillis())
         }
     }
 
@@ -107,7 +107,7 @@ class QueueManagerTest {
             `when`(queueRedisRepository.getWaitingQueuePosition(TOKEN, userId.toString())).thenReturn(expectedPosition)
 
             // when
-            val result = queueManager.getPositionInWaitingStatus(TOKEN, userId.toString())
+            val result = queueManager.getPositionInWaitingStatus(TOKEN)
 
             // then
             assertThat(result).isEqualTo(expectedPosition)

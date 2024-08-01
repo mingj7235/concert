@@ -9,7 +9,6 @@ import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.util.JwtUtil
 import com.hhplus.concert.infrastructure.redis.QueueRedisRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -70,12 +69,17 @@ class QueueServiceIntegrationTest {
             val user = userRepository.save(User(name = "TestUser"))
             val oldToken = queueService.issueQueueToken(user.id).token
 
+            // 기존 토큰이 대기열에 있는지 확인
+            assertTrue(queueRedisRepository.getWaitingQueuePosition(oldToken, user.id.toString()) >= 0)
+
+            Thread.sleep(1000)
+
             // when
             val newResult = queueService.issueQueueToken(user.id)
 
             // then
             assertNotEquals(oldToken, newResult.token)
-            assertFalse(queueRedisRepository.isProcessingQueue(oldToken))
+            assertEquals(0, queueRedisRepository.getWaitingQueuePosition(oldToken, user.id.toString())) // 기존 토큰이 대기열에서 제거되었는지 확인
             assertTrue(queueRedisRepository.getWaitingQueuePosition(newResult.token, user.id.toString()) >= 0)
         }
 
@@ -97,9 +101,9 @@ class QueueServiceIntegrationTest {
         @Test
         fun `대기_중인_큐에_대해_올바른_정보를_반환해야_한다`() {
             // given
-            repeat(5) { i ->
+            repeat(1500) { i ->
                 val user = userRepository.save(User(name = "User$i"))
-                queueRedisRepository.addToWaitingQueue("token_$i", user.id.toString(), System.currentTimeMillis().toDouble())
+                queueRedisRepository.addToWaitingQueue("token_$i", user.id.toString(), System.currentTimeMillis())
             }
             val user = userRepository.save(User(name = "TestUser"))
             val token = queueService.issueQueueToken(user.id).token
@@ -119,29 +123,29 @@ class QueueServiceIntegrationTest {
             val user = userRepository.save(User(name = "TestUser"))
             val token = queueService.issueQueueToken(user.id).token
             queueRedisRepository.updateToProcessingQueue(token, user.id.toString(), System.currentTimeMillis() + 60000)
-            Thread.sleep(100)
 
             val isInProcessingQueue = queueRedisRepository.isProcessingQueue(token)
-            assertTrue(isInProcessingQueue, "Token should be in processing queue")
 
             // when
             val result = queueService.findQueueByToken(token)
 
             // then
+            assertTrue(isInProcessingQueue)
             assertEquals(QueueStatus.PROCESSING, result.status)
             assertEquals(0, result.remainingWaitListCount)
             assertEquals(0, result.estimatedWaitTime)
         }
 
         @Test
-        fun `존재하지_않는_토큰으로_요청시_예외를_발생시켜야_한다`() {
+        fun `존재하지_않는_토큰으로_요청시_취소된 토큰으로 내려보내야 한다`() {
             // given
             val nonExistentToken = "non_existent_token"
 
-            // when & then
-            assertThrows<BusinessException.NotFound> {
-                queueService.findQueueByToken(nonExistentToken)
-            }
+            // when
+            val result = queueService.findQueueByToken(nonExistentToken)
+
+            // then
+            assertEquals(QueueStatus.CANCELLED, result.status)
         }
     }
 
@@ -168,7 +172,11 @@ class QueueServiceIntegrationTest {
 
         // Redis에 만료된 항목 추가 (현재 시간보다 이전 시간으로 설정)
         val expiredTime = System.currentTimeMillis() - 1000000
-        redisTemplate.opsForSet().add(QueueRedisRepository.WAITING_QUEUE_KEY, "$token:${user.id}:$expiredTime")
+        redisTemplate.opsForZSet().add(QueueRedisRepository.WAITING_QUEUE_KEY, "$token:${user.id}", expiredTime.toDouble())
+
+        // 만료되지 않은 항목 추가
+        val notExpiredTime = System.currentTimeMillis() + 1000000
+        redisTemplate.opsForZSet().add(QueueRedisRepository.WAITING_QUEUE_KEY, "notExpired:${user.id}", notExpiredTime.toDouble())
 
         // when
         queueService.cancelExpiredWaitingQueue()

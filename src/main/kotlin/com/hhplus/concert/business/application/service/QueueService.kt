@@ -34,7 +34,7 @@ class QueueService(
         val status = queueManager.getQueueStatus(token)
         val isWaiting = status == QueueStatus.WAITING
 
-        val position = if (isWaiting) queueManager.getPositionInWaitingStatus(token, "") else NO_REMAINING_WAIT
+        val position = if (isWaiting) queueManager.getPositionInWaitingStatus(token) else NO_REMAINING_WAIT
         val estimatedWaitTime = if (isWaiting) queueManager.calculateEstimatedWaitSeconds(position) else NO_REMAINING_WAIT
 
         return QueueServiceDto.Queue(

@@ -77,10 +77,8 @@ class QueueServiceTest {
         @Test
         fun `token을 통해 queue를 조회하고, WAITING 상태라면 대기열 정보를 계산하여 리턴한다`() {
             // Given
-            val userId = 1L
-
             `when`(queueManager.getQueueStatus(TOKEN)).thenReturn(QueueStatus.WAITING)
-            `when`(queueManager.getPositionInWaitingStatus(TOKEN, userId.toString())).thenReturn(5L)
+            `when`(queueManager.getPositionInWaitingStatus(TOKEN)).thenReturn(5L)
             `when`(queueManager.calculateEstimatedWaitSeconds(5L)).thenReturn(300L)
             `when`(jwtUtil.getUserIdFromToken(TOKEN)).thenReturn(1L)
 

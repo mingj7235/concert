@@ -13,7 +13,13 @@ class QueueManager(
     // JWT Token 을 userId 로 생성하고, QUEUE 를 생성한다.
     fun enqueueAndIssueToken(userId: Long): String {
         val token = jwtUtil.generateToken(userId)
-        val score = System.currentTimeMillis().toDouble()
+        val score = System.currentTimeMillis()
+        val existingToken = queueRedisRepository.findWaitingQueueTokenByUserId(userId.toString())
+
+        existingToken?.let {
+            queueRedisRepository.removeFromWaitingQueue(it, userId.toString())
+        }
+
         queueRedisRepository.addToWaitingQueue(token, userId.toString(), score)
         return token
     }
@@ -23,15 +29,15 @@ class QueueManager(
 
         return when {
             queueRedisRepository.isProcessingQueue(token) -> QueueStatus.PROCESSING
-            queueRedisRepository.getWaitingQueuePosition(token, userId.toString()) != 0L -> QueueStatus.WAITING
+            queueRedisRepository.getWaitingQueuePosition(token, userId.toString()) > 0L -> QueueStatus.WAITING
             else -> QueueStatus.CANCELLED
         }
     }
 
-    fun getPositionInWaitingStatus(
-        token: String,
-        userId: String,
-    ): Long = queueRedisRepository.getWaitingQueuePosition(token, userId)
+    fun getPositionInWaitingStatus(token: String): Long {
+        val userId = jwtUtil.getUserIdFromToken(token)
+        return queueRedisRepository.getWaitingQueuePosition(token, userId.toString())
+    }
 
     fun updateToProcessingTokens() {
         val availableProcessingRoom = calculateAvailableProcessingRoom()
