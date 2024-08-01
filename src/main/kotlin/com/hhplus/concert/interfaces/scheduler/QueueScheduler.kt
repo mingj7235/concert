@@ -12,7 +12,7 @@ class QueueScheduler(
     private val logger = LoggerFactory.getLogger(QueueScheduler::class.java)
 
     @Scheduled(fixedRate = 60000)
-    fun maintainProcessingCount() {
+    fun updateToProcessingTokens() {
         logger.info("Maintain Processing Scheduler Executed")
         queueService.updateToProcessingTokens()
     }

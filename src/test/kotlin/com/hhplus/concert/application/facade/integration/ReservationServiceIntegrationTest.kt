@@ -4,7 +4,6 @@ import com.hhplus.concert.business.application.dto.ReservationServiceDto
 import com.hhplus.concert.business.application.service.ReservationService
 import com.hhplus.concert.business.domain.entity.Concert
 import com.hhplus.concert.business.domain.entity.ConcertSchedule
-import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.ConcertRepository
@@ -13,9 +12,9 @@ import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
-import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.ReservationStatus
 import com.hhplus.concert.common.type.SeatStatus
+import com.hhplus.concert.infrastructure.redis.QueueRedisRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -35,7 +34,7 @@ class ReservationServiceIntegrationTest {
     private lateinit var userRepository: UserRepository
 
     @Autowired
-    private lateinit var queueRepository: QueueRepository
+    private lateinit var queueRedisRepository: QueueRedisRepository
 
     @Autowired
     private lateinit var concertRepository: ConcertRepository
@@ -51,13 +50,10 @@ class ReservationServiceIntegrationTest {
         // given
         val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val concert =
@@ -115,13 +111,10 @@ class ReservationServiceIntegrationTest {
         // given
         val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.WAITING,
-            ),
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val reservationRequest =
@@ -142,13 +135,11 @@ class ReservationServiceIntegrationTest {
     fun `존재하지 않는 사용자 ID로 요청시 예외를 발생시켜야 한다`() {
         // given
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = userRepository.save(User(name = "Test User")),
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        val user = userRepository.save(User(name = "Test User"))
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val nonExistentUserId = 99999L
@@ -169,15 +160,12 @@ class ReservationServiceIntegrationTest {
     @Test
     fun `존재하지 않는 콘서트 ID로 요청시 예외를 발생시켜야 한다`() {
         // given
-        val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        val user = userRepository.save(User(name = "Test User"))
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val nonExistentConcertId = 99999L
@@ -198,15 +186,12 @@ class ReservationServiceIntegrationTest {
     @Test
     fun `존재하지 않는 스케줄 ID로 요청시 예외를 발생시켜야 한다`() {
         // given
-        val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        val user = userRepository.save(User(name = "Test User"))
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val concert =
@@ -236,15 +221,12 @@ class ReservationServiceIntegrationTest {
     @Test
     fun `이미 예약된 좌석을 요청시 예외를 발생시켜야 한다`() {
         // given
-        val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        val user = userRepository.save(User(name = "Test User"))
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val concert =
@@ -290,15 +272,12 @@ class ReservationServiceIntegrationTest {
     @Test
     fun `존재하지 않는 좌석 ID로 요청시 예외를 발생시켜야 한다`() {
         // given
-        val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        val user = userRepository.save(User(name = "Test User"))
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val concert =
@@ -336,15 +315,12 @@ class ReservationServiceIntegrationTest {
     @Test
     fun `여러 좌석을 한 번에 예약할 수 있어야 한다`() {
         // given
-        val user = userRepository.save(User(name = "Test User"))
         val token = "test_token"
-        queueRepository.save(
-            Queue(
-                user = user,
-                token = token,
-                joinedAt = LocalDateTime.now(),
-                queueStatus = QueueStatus.PROCESSING,
-            ),
+        val user = userRepository.save(User(name = "Test User"))
+        queueRedisRepository.addToWaitingQueue(
+            token,
+            user.id.toString(),
+            System.currentTimeMillis() + 1000 * 60 * 5, // 5분
         )
 
         val concert =
