@@ -1,15 +1,13 @@
 package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.service.QueueService
-import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.common.error.code.ErrorCode
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.QueueStatus
-import com.hhplus.concert.domain.manager.queue.QueueManagerTest
-import org.junit.jupiter.api.Assertions.assertEquals
+import com.hhplus.concert.common.util.JwtUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -17,11 +15,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import java.time.LocalDateTime
 
 /**
  * QueueService 단위 테스트
@@ -32,6 +28,9 @@ class QueueServiceTest {
 
     @Mock
     private lateinit var userManager: UserManager
+
+    @Mock
+    private lateinit var jwtUtil: JwtUtil
 
     @InjectMocks
     private lateinit var queueService: QueueService
@@ -45,45 +44,19 @@ class QueueServiceTest {
     @DisplayName("issueQueueToken 테스트")
     inner class IssueQueueTokenTest {
         @Test
-        fun `기존 대기열이 없는 경우 새로운 토큰을 발급한다`() {
+        fun `새로운 토큰을 발급한다`() {
             // given
-            val userId = 0L
+            val userId = 1L
             val user = User("User")
-
-            `when`(userManager.findById(userId)).thenReturn(user)
-            `when`(queueManager.findByUserIdAndStatus(userId, QueueStatus.WAITING)).thenReturn(null)
-            `when`(queueManager.enqueueAndIssueToken(user)).thenReturn(TOKEN)
+            `when`(userManager.findById(userId)).thenReturn(user) // 사용자 존재 확인
+            `when`(queueManager.enqueueAndIssueToken(userId)).thenReturn(TOKEN)
 
             // when
             val result = queueService.issueQueueToken(userId)
 
             // then
-            assertEquals(TOKEN, result.token)
-        }
-
-        @Test
-        fun `기존 대기열이 있는 경우 취소 후 새로운 토큰을 발급한다`() {
-            // given
-            val userId = 0L
-            val user = User("User")
-            val existingQueue =
-                Queue(
-                    user = user,
-                    token = QueueManagerTest.TOKEN,
-                    joinedAt = LocalDateTime.now(),
-                    QueueStatus.WAITING,
-                )
-
-            `when`(userManager.findById(userId)).thenReturn(user)
-            `when`(queueManager.findByUserIdAndStatus(userId, QueueStatus.WAITING)).thenReturn(existingQueue)
-            `when`(queueManager.enqueueAndIssueToken(user)).thenReturn(TOKEN)
-
-            // when
-            val result = queueService.issueQueueToken(userId)
-
-            // then
-            assertEquals(TOKEN, result.token)
-            verify(queueManager).updateStatus(existingQueue, QueueStatus.CANCELLED)
+            assert(result.token == TOKEN)
+            verify(queueManager).enqueueAndIssueToken(userId)
         }
 
         @Test
@@ -102,119 +75,69 @@ class QueueServiceTest {
     @DisplayName("findQueueByToken 테스트")
     inner class FindQueueByTokenTest {
         @Test
-        fun `token 을 통해 queue 를 조회하고, WAITING 상태라면 대기열이 얼마나 남았는지 계산하여 리턴한다`() {
+        fun `token을 통해 queue를 조회하고, WAITING 상태라면 대기열 정보를 계산하여 리턴한다`() {
             // Given
-            val user = User("User")
-            val queueId = 0L
-            val queue =
-                Queue(
-                    user = user,
-                    token = QueueManagerTest.TOKEN,
-                    joinedAt = LocalDateTime.now(),
-                    QueueStatus.WAITING,
-                )
-            val position = 5
-
-            `when`(queueManager.findByToken(TOKEN)).thenReturn(queue)
-            `when`(queueManager.getPositionInWaitingStatus(queueId)).thenReturn(position)
+            `when`(queueManager.getQueueStatus(TOKEN)).thenReturn(QueueStatus.WAITING)
+            `when`(queueManager.getPositionInWaitingStatus(TOKEN)).thenReturn(5L)
+            `when`(queueManager.calculateEstimatedWaitSeconds(5L)).thenReturn(300L)
+            `when`(jwtUtil.getUserIdFromToken(TOKEN)).thenReturn(1L)
 
             // When
             val result = queueService.findQueueByToken(TOKEN)
 
             // Then
-            assertEquals(queueId, result.queueId)
-            assertEquals(QueueStatus.WAITING, result.status)
-            assertEquals(position, result.remainingWaitListCount)
-            verify(queueManager).findByToken(TOKEN)
-            verify(queueManager).getPositionInWaitingStatus(queueId)
+            assert(result.status == QueueStatus.WAITING)
+            assert(result.remainingWaitListCount == 5L)
+            assert(result.estimatedWaitTime == 300L)
         }
 
         @Test
-        fun `token 을 통해 queue 를 조회하고, WAITING 상태가 아니라면 대기열은 0을 리턴한다`() {
+        fun `token을 통해 queue를 조회하고, WAITING 상태가 아니라면 대기열은 0을 리턴한다`() {
             // Given
-            val user = User("User")
-            val queueId = 0L
-            val queue =
-                Queue(
-                    user = user,
-                    token = QueueManagerTest.TOKEN,
-                    joinedAt = LocalDateTime.now(),
-                    QueueStatus.PROCESSING,
-                )
-
-            `when`(queueManager.findByToken(TOKEN)).thenReturn(queue)
+            `when`(queueManager.getQueueStatus(TOKEN)).thenReturn(QueueStatus.PROCESSING)
+            `when`(jwtUtil.getUserIdFromToken(TOKEN)).thenReturn(1L)
 
             // When
             val result = queueService.findQueueByToken(TOKEN)
 
             // Then
-            assertEquals(queueId, result.queueId)
-            assertEquals(QueueStatus.PROCESSING, result.status)
-            assertEquals(0, result.remainingWaitListCount)
-            verify(queueManager).findByToken(TOKEN)
-            verify(queueManager, never()).getPositionInWaitingStatus(queueId)
+            assert(result.status == QueueStatus.PROCESSING)
+            assert(result.remainingWaitListCount == 0L)
+            assert(result.estimatedWaitTime == 0L)
         }
     }
 
     @Nested
-    @DisplayName("maintainProcessingCount 테스트")
-    inner class MaintainProcessingCountTest {
+    @DisplayName("updateToProcessingTokens 테스트")
+    inner class UpdateToProcessingTokensTest {
         @Test
-        fun `PROCESSING 상태인 큐 개수가 최대 허용 개수보다 적을 때 상태를 업데이트한다`() {
+        fun `PROCESSING 상태로 업데이트할 토큰이 있을 때 상태를 업데이트한다`() {
             // Given
-            val currentProcessingCount = 95
-            val neededToUpdateCount = ALLOWED_MAX_SIZE - currentProcessingCount
-
-            val queueIdsToUpdate = listOf(1L, 2L, 3L, 4L, 5L)
-
-            `when`(queueManager.countByQueueStatus(QueueStatus.PROCESSING)).thenReturn(currentProcessingCount)
-            `when`(queueManager.getNeededUpdateToProcessingIdsFromWaiting(neededToUpdateCount)).thenReturn(queueIdsToUpdate)
+            `when`(queueManager.updateToProcessingTokens())
 
             // When
-            queueService.maintainProcessingCount()
+            queueService.updateToProcessingTokens()
 
             // Then
-            verify(queueManager).countByQueueStatus(QueueStatus.PROCESSING)
-            verify(queueManager).getNeededUpdateToProcessingIdsFromWaiting(neededToUpdateCount)
-            verify(queueManager).updateStatus(queueIdsToUpdate, QueueStatus.PROCESSING)
+            verify(queueManager).updateToProcessingTokens()
         }
+    }
 
+    @Nested
+    @DisplayName("cancelExpiredWaitingQueue 테스트")
+    inner class CancelExpiredWaitingQueueTest {
         @Test
-        fun `처리 중인 큐 개수가 최대 허용 개수와 같을 때 상태를 업데이트하지 않는다`() {
-            // Given
-            val currentProcessingCount = ALLOWED_MAX_SIZE
-
-            `when`(queueManager.countByQueueStatus(QueueStatus.PROCESSING)).thenReturn(currentProcessingCount)
-
+        fun `만료된 대기열을 취소한다`() {
             // When
-            queueService.maintainProcessingCount()
+            queueService.cancelExpiredWaitingQueue()
 
             // Then
-            verify(queueManager).countByQueueStatus(QueueStatus.PROCESSING)
-            verify(queueManager, never()).getNeededUpdateToProcessingIdsFromWaiting(0)
-            verify(queueManager, never()).updateStatus(emptyList(), QueueStatus.PROCESSING)
-        }
-
-        @Test
-        fun `처리 중인 큐 개수가 최대 허용 개수를 초과할 때 상태를 업데이트하지 않는다`() {
-            // Given
-            val currentProcessingCount = ALLOWED_MAX_SIZE + 10
-
-            `when`(queueManager.countByQueueStatus(QueueStatus.PROCESSING)).thenReturn(currentProcessingCount)
-
-            // When
-            queueService.maintainProcessingCount()
-
-            // Then
-            verify(queueManager).countByQueueStatus(QueueStatus.PROCESSING)
-            verify(queueManager, never()).getNeededUpdateToProcessingIdsFromWaiting(0)
-            verify(queueManager, never()).updateStatus(emptyList(), QueueStatus.PROCESSING)
+            verify(queueManager).removeExpiredWaitingQueue()
         }
     }
 
     companion object {
         const val NON_EXISTED_USER_ID = -1L
         const val TOKEN = "test_token"
-        const val ALLOWED_MAX_SIZE = 100
     }
 }

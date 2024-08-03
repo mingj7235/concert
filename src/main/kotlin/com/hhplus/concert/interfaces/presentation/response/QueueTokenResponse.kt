@@ -2,35 +2,30 @@ package com.hhplus.concert.interfaces.presentation.response
 
 import com.hhplus.concert.business.application.dto.QueueServiceDto
 import com.hhplus.concert.common.type.QueueStatus
-import java.time.LocalDateTime
 
 class QueueTokenResponse {
     data class Token(
         val token: String,
-        val createdAt: LocalDateTime,
     ) {
         companion object {
             fun from(issuedTokenDto: QueueServiceDto.IssuedToken): Token =
                 Token(
                     token = issuedTokenDto.token,
-                    createdAt = issuedTokenDto.createdAt,
                 )
         }
     }
 
     data class Queue(
-        val queueId: Long,
-        val joinAt: LocalDateTime,
         val status: QueueStatus,
-        val remainingWaitListCount: Int,
+        val remainingWaitListCount: Long,
+        val estimatedWaitTime: Long,
     ) {
         companion object {
             fun from(queueDto: QueueServiceDto.Queue): Queue =
                 Queue(
-                    queueId = queueDto.queueId,
-                    joinAt = queueDto.joinAt,
                     status = queueDto.status,
                     remainingWaitListCount = queueDto.remainingWaitListCount,
+                    estimatedWaitTime = queueDto.estimatedWaitTime,
                 )
         }
     }

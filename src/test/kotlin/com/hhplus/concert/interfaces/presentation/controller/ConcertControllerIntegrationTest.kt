@@ -2,19 +2,17 @@ package com.hhplus.concert.interfaces.presentation.controller
 
 import com.hhplus.concert.business.domain.entity.Concert
 import com.hhplus.concert.business.domain.entity.ConcertSchedule
-import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.ConcertRepository
 import com.hhplus.concert.business.domain.repository.ConcertScheduleRepository
-import com.hhplus.concert.business.domain.repository.QueueRepository
 import com.hhplus.concert.business.domain.repository.SeatRepository
 import com.hhplus.concert.business.domain.repository.UserRepository
 import com.hhplus.concert.common.constants.TokenConstants.QUEUE_TOKEN_HEADER
 import com.hhplus.concert.common.type.ConcertStatus
-import com.hhplus.concert.common.type.QueueStatus
 import com.hhplus.concert.common.type.SeatStatus
 import com.hhplus.concert.common.util.JwtUtil
+import com.hhplus.concert.infrastructure.redis.QueueRedisRepository
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -38,7 +36,7 @@ class ConcertControllerIntegrationTest {
     private lateinit var userRepository: UserRepository
 
     @Autowired
-    private lateinit var queueRepository: QueueRepository
+    private lateinit var queueRedisRepository: QueueRedisRepository
 
     @Autowired
     private lateinit var concertRepository: ConcertRepository
@@ -60,13 +58,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
 
             val availableConcert =
@@ -120,13 +115,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.WAITING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
 
             // when & then
@@ -143,13 +135,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
 
             // when
@@ -175,13 +164,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
 
             val concert =
@@ -250,13 +236,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.WAITING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
             val concertId = 1L
 
@@ -274,13 +257,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
             val nonExistentConcertId = 99999L
 
@@ -302,13 +282,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
 
             val concert =
@@ -391,13 +368,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.WAITING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
             val concertId = 1L
             val scheduleId = 1L
@@ -416,13 +390,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
             val nonExistentConcertId = 99999L
             val scheduleId = 1L
@@ -441,13 +412,10 @@ class ConcertControllerIntegrationTest {
             // given
             val user = userRepository.save(User(name = "Test User"))
             val token = jwtUtil.generateToken(user.id)
-            queueRepository.save(
-                Queue(
-                    user = user,
-                    token = token,
-                    joinedAt = LocalDateTime.now(),
-                    queueStatus = QueueStatus.PROCESSING,
-                ),
+            queueRedisRepository.addToWaitingQueue(
+                token,
+                user.id.toString(),
+                System.currentTimeMillis() + 1000 * 60 * 5, // 5분
             )
             val concert =
                 concertRepository.save(

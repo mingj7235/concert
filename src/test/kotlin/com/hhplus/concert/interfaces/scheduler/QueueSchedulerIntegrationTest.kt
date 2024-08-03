@@ -1,170 +1,98 @@
 package com.hhplus.concert.interfaces.scheduler
 
-import com.hhplus.concert.business.domain.entity.Queue
-import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.repository.QueueRepository
-import com.hhplus.concert.business.domain.repository.UserRepository
-import com.hhplus.concert.common.type.QueueStatus
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
+import com.hhplus.concert.infrastructure.redis.QueueRedisRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import org.springframework.data.redis.core.RedisTemplate
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class QueueSchedulerIntegrationTest {
     @Autowired
     private lateinit var queueScheduler: QueueScheduler
 
     @Autowired
-    private lateinit var queueRepository: QueueRepository
+    private lateinit var redisTemplate: RedisTemplate<String, String>
 
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var queueManager: QueueManager
+
+    @Autowired
+    private lateinit var queueRedisRepository: QueueRedisRepository
+
+    @BeforeEach
+    fun setup() {
+        redisTemplate.execute { connection ->
+            connection.flushAll()
+        }
+    }
 
     @Nested
-    @DisplayName("[maintainProcessingCount] 테스트")
-    inner class MaintainProcessingCountTest {
+    @DisplayName("[activateWaitingTokens] 테스트")
+    inner class ActivateWaitingTokensTest {
         @Test
-        fun `스케줄러가 PROCESSING 상태의 100개의 큐 개수를 유지해야 한다`() {
+        fun `스케줄러가 WAITING 상태의 토큰을 PROCESSING 상태로 전환해야 한다`() {
             // given
-            val processingCount = 95
-            val waitingCount = 10
-            createQueues(processingCount, QueueStatus.PROCESSING)
-            createQueues(waitingCount, QueueStatus.WAITING)
+            val waitingCount = 1050
+            createTokens(waitingCount)
 
             // when
-            queueScheduler.maintainProcessingCount()
+            queueScheduler.updateToProcessingTokens()
 
-            val updatedProcessingCount = queueRepository.countByQueueStatus(QueueStatus.PROCESSING)
-            val updatedWaitingCount = queueRepository.countByQueueStatus(QueueStatus.WAITING)
+            // then
+            val updatedProcessingCount = queueRedisRepository.getProcessingQueueCount()
+            val updatedWaitingCount = queueRedisRepository.getWaitingQueueSize()
 
-            assertEquals(ALLOWED_QUEUE_MAX_SIZE, updatedProcessingCount)
-            assertEquals(waitingCount - (ALLOWED_QUEUE_MAX_SIZE - processingCount), updatedWaitingCount)
+            assertEquals(QueueManager.ALLOWED_PROCESSING_TOKEN_COUNT_LIMIT.toLong(), updatedProcessingCount)
+            assertEquals(50, updatedWaitingCount)
         }
 
         @Test
-        fun `PROCESSING 상태의 큐가 이미 최대 개수일 때 스케줄러가 아무 작업도 수행하지 않아야 한다`() {
+        fun `PROCESSING 상태의 토큰이 이미 최대 개수일 때 스케줄러가 아무 작업도 수행하지 않아야 한다`() {
             // given
-            createQueues(ALLOWED_QUEUE_MAX_SIZE, QueueStatus.PROCESSING)
-            createQueues(5, QueueStatus.WAITING)
+            createTokens(QueueManager.ALLOWED_PROCESSING_TOKEN_COUNT_LIMIT)
+            createTokens(5)
 
             // when
-            queueScheduler.maintainProcessingCount()
+            queueScheduler.updateToProcessingTokens()
 
-            val updatedProcessingCount = queueRepository.countByQueueStatus(QueueStatus.PROCESSING)
-            val updatedWaitingCount = queueRepository.countByQueueStatus(QueueStatus.WAITING)
+            // then
+            val updatedProcessingCount = queueRedisRepository.getProcessingQueueCount()
+            val updatedWaitingCount = queueRedisRepository.getWaitingQueueSize()
 
-            assertEquals(ALLOWED_QUEUE_MAX_SIZE, updatedProcessingCount)
+            assertEquals(QueueManager.ALLOWED_PROCESSING_TOKEN_COUNT_LIMIT.toLong(), updatedProcessingCount)
             assertEquals(5, updatedWaitingCount)
         }
 
         @Test
-        fun `WAITING 상태의 큐가 없을 때 스케줄러가 아무 작업도 수행하지 않아야 한다`() {
+        fun `WAITING 상태의 토큰이 없을 때 스케줄러가 아무 작업도 수행하지 않아야 한다`() {
             // given
             val processingCount = 3
-            createQueues(processingCount, QueueStatus.PROCESSING)
+            createTokens(processingCount)
 
             // when
-            queueScheduler.maintainProcessingCount()
+            queueScheduler.updateToProcessingTokens()
 
-            val updatedProcessingCount = queueRepository.countByQueueStatus(QueueStatus.PROCESSING)
-            val updatedWaitingCount = queueRepository.countByQueueStatus(QueueStatus.WAITING)
+            // then
+            val updatedProcessingCount = queueRedisRepository.getProcessingQueueCount()
+            val updatedWaitingCount = queueRedisRepository.getWaitingQueueSize()
 
-            assertEquals(processingCount, updatedProcessingCount)
+            assertEquals(processingCount.toLong(), updatedProcessingCount)
             assertEquals(0, updatedWaitingCount)
         }
 
-        private fun createQueues(
-            count: Int,
-            status: QueueStatus,
-        ) {
+        private fun createTokens(count: Int) {
             repeat(count) {
-                val user = userRepository.save(User(name = "User $it"))
-                queueRepository.save(
-                    Queue(
-                        user = user,
-                        token = "token_$it",
-                        joinedAt = LocalDateTime.now(),
-                        queueStatus = status,
-                    ),
-                )
+                val userId = it
+                queueManager.enqueueAndIssueToken(userId.toLong())
             }
         }
-    }
-
-    @Nested
-    @DisplayName("[cancelExpiredWaitingQueue] 테스트")
-    inner class CancelExpiredWaitingQueueTest {
-        @Test
-        fun `만료된 대기 큐는 취소됨`() {
-            // Given
-            val now = LocalDateTime.now()
-
-            val user1 = userRepository.save(User(name = "User1"))
-            val user2 = userRepository.save(User(name = "User2"))
-
-            val expiredQueue =
-                Queue(
-                    user = user1,
-                    token = "token1",
-                    joinedAt = now.minusHours(2),
-                    queueStatus = QueueStatus.WAITING,
-                )
-
-            val activeQueue =
-                Queue(
-                    user = user2,
-                    token = "token2",
-                    joinedAt = now.minusMinutes(30),
-                    queueStatus = QueueStatus.WAITING,
-                )
-
-            queueRepository.save(expiredQueue)
-            queueRepository.save(activeQueue)
-
-            // When
-            queueScheduler.cancelExpiredWaitingQueue()
-
-            // Then
-            val updatedExpiredQueue = queueRepository.findById(expiredQueue.id)
-            val updatedActiveQueue = queueRepository.findById(activeQueue.id)
-
-            assertEquals(QueueStatus.CANCELLED, updatedExpiredQueue!!.queueStatus)
-            assertEquals(QueueStatus.WAITING, updatedActiveQueue!!.queueStatus)
-        }
-
-        @Test
-        fun `취소된 큐는 다시 취소되지 않음`() {
-            // Given
-            val now = LocalDateTime.now()
-            val user1 = userRepository.save(User(name = "User1"))
-            val cancelledQueue =
-                Queue(
-                    user = user1,
-                    token = "token1",
-                    joinedAt = now.minusHours(2),
-                    queueStatus = QueueStatus.CANCELLED,
-                )
-
-            queueRepository.save(cancelledQueue)
-
-            // When
-            queueScheduler.cancelExpiredWaitingQueue()
-
-            // Then
-            val updatedQueue = queueRepository.findById(cancelledQueue.id)
-            assertEquals(QueueStatus.CANCELLED, updatedQueue!!.queueStatus)
-        }
-    }
-
-    companion object {
-        const val ALLOWED_QUEUE_MAX_SIZE = 100
     }
 }
