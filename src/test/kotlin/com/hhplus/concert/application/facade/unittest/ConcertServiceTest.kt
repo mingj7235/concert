@@ -6,8 +6,8 @@ import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.manager.ConcertManager
-import com.hhplus.concert.business.domain.manager.QueueManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.ConcertStatus
 import com.hhplus.concert.common.type.QueueStatus
@@ -45,11 +45,10 @@ class ConcertServiceTest {
     @Test
     fun `유효한 토큰으로 예약 가능한 콘서트 목록을 반환해야 한다`() {
         val token = TOKEN
-        val queue = PROCESSING_QUEUE
         val concert1 = AVAILABLE_CONCERT1
         val concert2 = AVAILABLE_CONCERT2
 
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.PROCESSING)
         `when`(concertManager.getAvailableConcerts()).thenReturn(listOf(concert1, concert2))
 
         val result = concertService.getAvailableConcerts(token)
@@ -64,9 +63,8 @@ class ConcertServiceTest {
     @Test
     fun `유효하지 않은 큐 상태로 콘서트 목록 조회 시 예외를 발생시켜야 한다`() {
         val token = TOKEN
-        val queue = WAITING_QUEUE
 
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.WAITING)
 
         assertThrows<BusinessException.BadRequest> {
             concertService.getAvailableConcerts(token)
@@ -77,11 +75,10 @@ class ConcertServiceTest {
     fun `유효한 토큰으로 콘서트 스케줄을 반환해야 한다`() {
         val token = TOKEN
         val concertId = 0L
-        val queue = PROCESSING_QUEUE
         val schedule1 = VALID_SCHEDULE1
         val schedule2 = VALID_SCHEDULE2
 
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.PROCESSING)
         `when`(concertManager.getAvailableConcertSchedules(concertId)).thenReturn(listOf(schedule1, schedule2))
 
         val result = concertService.getConcertSchedules(token, concertId)
@@ -95,11 +92,10 @@ class ConcertServiceTest {
         val token = TOKEN
         val concertId = 0L
         val scheduleId = 0L
-        val queue = PROCESSING_QUEUE
         val seat1 = SEAT1
         val seat2 = SEAT2
 
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.PROCESSING)
         `when`(concertManager.getAvailableSeats(concertId, scheduleId)).thenReturn(listOf(seat1, seat2))
 
         val result = concertService.getAvailableSeats(token, concertId, scheduleId)
@@ -119,9 +115,8 @@ class ConcertServiceTest {
         val token = "invalidToken"
         val concertId = 1L
         val scheduleId = 1L
-        val queue = WAITING_QUEUE
 
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.WAITING)
 
         assertThrows<BusinessException.BadRequest> {
             concertService.getAvailableSeats(token, concertId, scheduleId)

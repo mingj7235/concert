@@ -20,31 +20,37 @@ class PaymentManager(
      * - payment 를 저장한다.
      * - 예상치 못한 예외 발생 시, 결제 실패로 저장한다.
      */
-    fun execute(
+    fun executeAndSaveHistory(
         user: User,
         requestReservations: List<Reservation>,
-    ): List<Payment> =
-        requestReservations.map { reservation ->
-            runCatching {
-                Payment(
-                    user = user,
-                    reservation = reservation,
-                    amount = reservation.seat.seatPrice,
-                    executedAt = LocalDateTime.now(),
-                    paymentStatus = PaymentStatus.COMPLETED,
-                ).let { paymentRepository.save(it) }
-            }.getOrElse {
-                Payment(
-                    user = user,
-                    reservation = reservation,
-                    amount = reservation.seat.seatPrice,
-                    executedAt = LocalDateTime.now(),
-                    paymentStatus = PaymentStatus.FAILED,
-                ).let { paymentRepository.save(it) }
+    ): List<Payment> {
+        val payments =
+            requestReservations.map { reservation ->
+                runCatching {
+                    Payment(
+                        user = user,
+                        reservation = reservation,
+                        amount = reservation.seat.seatPrice,
+                        executedAt = LocalDateTime.now(),
+                        paymentStatus = PaymentStatus.COMPLETED,
+                    ).let { paymentRepository.save(it) }
+                }.getOrElse {
+                    Payment(
+                        user = user,
+                        reservation = reservation,
+                        amount = reservation.seat.seatPrice,
+                        executedAt = LocalDateTime.now(),
+                        paymentStatus = PaymentStatus.FAILED,
+                    ).let { paymentRepository.save(it) }
+                }
             }
-        }
 
-    fun saveHistory(
+        saveHistory(user, payments)
+
+        return payments
+    }
+
+    private fun saveHistory(
         user: User,
         payments: List<Payment>,
     ) {

@@ -21,6 +21,11 @@ interface ReservationJpaRepository : JpaRepository<Reservation, Long> {
         reservationStatus: ReservationStatus,
     )
 
-    @Query("SELECT r FROM Reservation r JOIN FETCH r.seat WHERE r.id IN :reservationIds")
+    @Query(
+        "SELECT r FROM Reservation r " +
+            "JOIN FETCH r.seat s " +
+            "JOIN FETCH s.concertSchedule cs " +
+            "WHERE r.id IN :reservationIds",
+    )
     fun findAllByIdFetchSeat(reservationIds: List<Long>): List<Reservation>
 }

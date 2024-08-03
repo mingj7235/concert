@@ -4,13 +4,12 @@ import com.hhplus.concert.business.application.dto.ReservationServiceDto
 import com.hhplus.concert.business.application.service.ReservationService
 import com.hhplus.concert.business.domain.entity.Concert
 import com.hhplus.concert.business.domain.entity.ConcertSchedule
-import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.manager.ConcertManager
-import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationLockManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.exception.BusinessException
@@ -63,13 +62,7 @@ class ReservationServiceTest {
         val token = "test-token"
         val request = ReservationServiceDto.Request(userId = 1L, concertId = 1L, scheduleId = 1L, seatIds = listOf(1L, 2L))
         val user = User("User")
-        val queue =
-            Queue(
-                user = user,
-                token = TOKEN,
-                joinedAt = LocalDateTime.now(),
-                QueueStatus.PROCESSING,
-            )
+
         val availableSeats = listOf(SEAT1, SEAT2)
         val createdReservations =
             listOf(
@@ -77,7 +70,7 @@ class ReservationServiceTest {
                 RESERVATION2,
             )
 
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.PROCESSING)
         `when`(userManager.findById(request.userId)).thenReturn(user)
         `when`(concertManager.getAvailableSeats(request.concertId, request.scheduleId)).thenReturn(availableSeats)
         `when`(reservationLockManager.createReservations(request)).thenReturn(createdReservations)
@@ -89,7 +82,7 @@ class ReservationServiceTest {
         assertEquals(2, result.size)
         assertEquals(1L, result[0].reservationId)
         assertEquals(2L, result[1].reservationId)
-        verify(queueManager).findByToken(token)
+        verify(queueManager).getQueueStatus(token)
         verify(userManager).findById(request.userId)
         verify(concertManager).getAvailableSeats(request.concertId, request.scheduleId)
         verify(reservationLockManager).createReservations(request)
@@ -99,16 +92,8 @@ class ReservationServiceTest {
     fun `큐 상태가 Processing이 아닐 때 예외 발생 테스트`() {
         // Given
         val request = ReservationServiceDto.Request(userId = 1L, concertId = 1L, scheduleId = 1L, seatIds = listOf(1L))
-        val user = User("User")
-        val queue =
-            Queue(
-                user = user,
-                token = TOKEN,
-                joinedAt = LocalDateTime.now(),
-                QueueStatus.WAITING,
-            )
 
-        `when`(queueManager.findByToken(TOKEN)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(TOKEN)).thenReturn(QueueStatus.WAITING)
 
         // When & Then
         assertThrows<BusinessException.BadRequest> {
@@ -121,16 +106,9 @@ class ReservationServiceTest {
         // Given
         val request = ReservationServiceDto.Request(userId = 1L, concertId = 1L, scheduleId = 1L, seatIds = listOf(1L, 3L))
         val user = User("User")
-        val queue =
-            Queue(
-                user = user,
-                token = TOKEN,
-                joinedAt = LocalDateTime.now(),
-                QueueStatus.PROCESSING,
-            )
         val availableSeats = listOf(SEAT1)
 
-        `when`(queueManager.findByToken(TOKEN)).thenReturn(queue)
+        `when`(queueManager.getQueueStatus(TOKEN)).thenReturn(QueueStatus.PROCESSING)
         `when`(userManager.findById(request.userId)).thenReturn(user)
         `when`(concertManager.getAvailableSeats(request.concertId, request.scheduleId)).thenReturn(availableSeats)
 

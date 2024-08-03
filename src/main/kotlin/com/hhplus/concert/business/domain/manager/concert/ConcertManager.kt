@@ -1,4 +1,4 @@
-package com.hhplus.concert.business.domain.manager
+package com.hhplus.concert.business.domain.manager.concert
 
 import com.hhplus.concert.business.domain.entity.Concert
 import com.hhplus.concert.business.domain.entity.ConcertSchedule

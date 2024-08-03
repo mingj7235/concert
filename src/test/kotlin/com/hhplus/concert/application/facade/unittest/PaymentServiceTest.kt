@@ -1,13 +1,17 @@
 package com.hhplus.concert.application.facade.unittest
 
 import com.hhplus.concert.business.application.service.PaymentService
+import com.hhplus.concert.business.domain.entity.Concert
+import com.hhplus.concert.business.domain.entity.ConcertSchedule
 import com.hhplus.concert.business.domain.entity.Payment
-import com.hhplus.concert.business.domain.entity.Queue
 import com.hhplus.concert.business.domain.entity.Reservation
+import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.manager.PaymentManager
-import com.hhplus.concert.business.domain.manager.QueueManager
 import com.hhplus.concert.business.domain.manager.UserManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertCacheManager
+import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
@@ -36,6 +40,12 @@ class PaymentServiceTest {
     @Mock
     private lateinit var queueManager: QueueManager
 
+    @Mock
+    private lateinit var concertManager: ConcertManager
+
+    @Mock
+    private lateinit var concertCacheManager: ConcertCacheManager
+
     @InjectMocks
     private lateinit var paymentService: PaymentService
 
@@ -54,17 +64,30 @@ class PaymentServiceTest {
         val user = mock(User::class.java)
         val reservation1 = mock(Reservation::class.java)
         val reservation2 = mock(Reservation::class.java)
+        val seat1 = mock(Seat::class.java)
+        val seat2 = mock(Seat::class.java)
+        val concert1 = mock(Concert::class.java)
+        val concert2 = mock(Concert::class.java)
+        val concertSchedule1 = mock(ConcertSchedule::class.java)
+        val concertSchedule2 = mock(ConcertSchedule::class.java)
         val payment1 = mock(Payment::class.java)
         val payment2 = mock(Payment::class.java)
-        val queue = mock(Queue::class.java)
 
         `when`(userManager.findById(userId)).thenReturn(user)
         `when`(reservationManager.findAllById(reservationIds)).thenReturn(listOf(reservation1, reservation2))
         `when`(reservation1.user).thenReturn(user)
         `when`(reservation2.user).thenReturn(user)
+        `when`(reservation1.seat).thenReturn(seat1)
+        `when`(reservation2.seat).thenReturn(seat2)
+        `when`(concertSchedule1.concert).thenReturn(concert1)
+        `when`(concertSchedule2.concert).thenReturn(concert2)
+        `when`(concert1.id).thenReturn(1L)
+        `when`(concert2.id).thenReturn(2L)
+        `when`(seat1.concertSchedule).thenReturn(concertSchedule1)
+        `when`(seat2.concertSchedule).thenReturn(concertSchedule2)
         `when`(user.id).thenReturn(userId)
-        `when`(paymentManager.execute(user, listOf(reservation1, reservation2))).thenReturn(listOf(payment1, payment2))
-        `when`(queueManager.findByToken(token)).thenReturn(queue)
+        `when`(paymentManager.executeAndSaveHistory(user, listOf(reservation1, reservation2))).thenReturn(listOf(payment1, payment2))
+        `when`(queueManager.getQueueStatus(token)).thenReturn(QueueStatus.PROCESSING)
 
         `when`(payment1.id).thenReturn(1L)
         `when`(payment1.amount).thenReturn(10000)
@@ -85,9 +108,8 @@ class PaymentServiceTest {
         assertEquals(20000, result[1].amount)
         assertEquals(PaymentStatus.COMPLETED, result[1].paymentStatus)
 
-        verify(paymentManager).saveHistory(user, listOf(payment1, payment2))
         verify(reservationManager).complete(listOf(reservation1, reservation2))
-        verify(queueManager).updateStatus(queue, QueueStatus.COMPLETED)
+        verify(queueManager).completeProcessingToken(token)
     }
 
     @Test
