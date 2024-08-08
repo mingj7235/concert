@@ -8,6 +8,7 @@
 ### [5. Swagger](https://github.com/mingj7235/concert/blob/main/docs/05_Swagger.md)
 ### [6. 동시성 이슈제어 분석 보고서](https://github.com/mingj7235/concert/blob/main/docs/06_ConcurrencyReport.md)
 ### [7. Cache 도입과 대기열 Redis 이관 보고서 ](https://github.com/mingj7235/concert/blob/main/docs/07_Cache_%26_Redis_Queue.md)
+### [8. 콘서트 대기열 시스템의 인덱스 적용과 차후 적용할 MSA 관점에서의 설계 ](https://github.com/mingj7235/concert/blob/main/docs/08_Index_%26_msa_blueprint.md)
 
 ## Mock API
 ### [1. Mock API Controller](https://github.com/mingj7235/concert/blob/main/src/main/kotlin/com/hhplus/concert/presentation/ConcertReservationMockController.kt)
