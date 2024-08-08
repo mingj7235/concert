@@ -1,5 +1,8 @@
 package com.hhplus.concert.infrastructure.client
 
+import com.hhplus.concert.business.domain.message.MessageAlarmPayload
+import com.hhplus.concert.business.domain.message.MessageClient
+import com.hhplus.concert.common.type.AlarmLevel
 import com.slack.api.Slack
 import com.slack.api.model.Attachments.asAttachments
 import com.slack.api.model.Attachments.attachment
@@ -14,10 +17,10 @@ import org.springframework.stereotype.Component
 class SlackClient(
     @Value("\${slack.checkin.webhook.base_url}") private val baseUrl: String,
     @Value("\${spring.profiles.active}") private val profile: String,
-) {
-    fun sendAlertMessage(alarm: SlackAlarmPayload): WebhookResponse? = Slack.getInstance().send(baseUrl, getSlackPayload(alarm))
+) : MessageClient {
+    override fun sendMessage(alarm: MessageAlarmPayload): WebhookResponse? = Slack.getInstance().send(baseUrl, getSlackPayload(alarm))
 
-    fun getSlackPayload(alarm: SlackAlarmPayload): Payload {
+    fun getSlackPayload(alarm: MessageAlarmPayload): Payload {
         val blocks =
             withBlocks {
                 context {

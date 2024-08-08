@@ -1,4 +1,4 @@
-package com.hhplus.concert.infrastructure.client
+package com.hhplus.concert.common.type
 
 enum class AlarmLevel {
     PRIMARY,
