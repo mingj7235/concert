@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: local
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/concert?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
@@ -25,3 +28,8 @@ queue:
 springdoc:
   swagger-ui:
     path: /api-docs/
+
+slack:
+  checkin:
+    webhook:
+      base_url: "https://hooks.slack.com/services/"
