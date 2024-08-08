@@ -10,8 +10,7 @@ import com.hhplus.concert.common.type.PaymentStatus
 import org.springframework.stereotype.Component
 
 /**
- * Message Client 를 통해 Event Message 를 담당하는 Manager 컴포넌트.
- * Inner class 로 도메인 별 Event 를 나눈다.
+ * Message Client 를 통해 Event Message 를 담당하는 컴포넌트.
  */
 @Component
 class PaymentMessageSender(
