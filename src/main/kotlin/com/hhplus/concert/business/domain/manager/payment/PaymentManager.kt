@@ -1,4 +1,4 @@
-package com.hhplus.concert.business.domain.manager
+package com.hhplus.concert.business.domain.manager.payment
 
 import com.hhplus.concert.business.domain.entity.Payment
 import com.hhplus.concert.business.domain.entity.PaymentHistory
@@ -6,6 +6,8 @@ import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
+import com.hhplus.concert.common.error.code.ErrorCode
+import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
@@ -14,6 +16,7 @@ import java.time.LocalDateTime
 class PaymentManager(
     private val paymentRepository: PaymentRepository,
     private val paymentHistoryRepository: PaymentHistoryRepository,
+    private val paymentEventPublisher: PaymentEventPublisher,
 ) {
     /**
      * 결제를 실행한다.
@@ -34,6 +37,11 @@ class PaymentManager(
                         executedAt = LocalDateTime.now(),
                         paymentStatus = PaymentStatus.COMPLETED,
                     ).let { paymentRepository.save(it) }
+                        .also {
+                            paymentEventPublisher.publishPaymentEvent(
+                                PaymentEvent(it.id),
+                            )
+                        }
                 }.getOrElse {
                     Payment(
                         user = user,
@@ -42,6 +50,11 @@ class PaymentManager(
                         executedAt = LocalDateTime.now(),
                         paymentStatus = PaymentStatus.FAILED,
                     ).let { paymentRepository.save(it) }
+                        .also {
+                            paymentEventPublisher.publishPaymentEvent(
+                                PaymentEvent(it.id),
+                            )
+                        }
                 }
             }
 
@@ -63,4 +76,7 @@ class PaymentManager(
             )
         }
     }
+
+    fun getPayment(paymentId: Long): Payment =
+        paymentRepository.findById(paymentId) ?: throw BusinessException.NotFound(ErrorCode.Payment.NOT_FOUND)
 }

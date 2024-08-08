@@ -7,10 +7,10 @@ import com.hhplus.concert.business.domain.entity.Payment
 import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.Seat
 import com.hhplus.concert.business.domain.entity.User
-import com.hhplus.concert.business.domain.manager.PaymentManager
 import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.business.domain.manager.concert.ConcertCacheManager
 import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.payment.PaymentManager
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.exception.BusinessException

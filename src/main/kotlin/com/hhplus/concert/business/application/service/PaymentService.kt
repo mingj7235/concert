@@ -2,10 +2,11 @@ package com.hhplus.concert.business.application.service
 
 import com.hhplus.concert.business.application.dto.PaymentServiceDto
 import com.hhplus.concert.business.domain.entity.Reservation
-import com.hhplus.concert.business.domain.manager.PaymentManager
 import com.hhplus.concert.business.domain.manager.UserManager
 import com.hhplus.concert.business.domain.manager.concert.ConcertCacheManager
 import com.hhplus.concert.business.domain.manager.concert.ConcertManager
+import com.hhplus.concert.business.domain.manager.payment.PaymentManager
+import com.hhplus.concert.business.domain.manager.payment.PaymentMessageSender
 import com.hhplus.concert.business.domain.manager.queue.QueueManager
 import com.hhplus.concert.business.domain.manager.reservation.ReservationManager
 import com.hhplus.concert.common.error.code.ErrorCode
@@ -20,6 +21,7 @@ class PaymentService(
     private val userManager: UserManager,
     private val reservationManager: ReservationManager,
     private val paymentManager: PaymentManager,
+    private val paymentMessageSender: PaymentMessageSender,
     private val queueManager: QueueManager,
     private val concertManager: ConcertManager,
     private val concertCacheManager: ConcertCacheManager,
@@ -95,5 +97,10 @@ class PaymentService(
                 concertCacheManager.evictConcertScheduleCache(concert.id)
             }
         }
+    }
+
+    @Transactional
+    fun sendPaymentEventMessage(paymentId: Long) {
+        paymentMessageSender.sendPaymentEventMessage(paymentId)
     }
 }
