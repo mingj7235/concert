@@ -15,13 +15,9 @@ class PaymentEventListener(
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun listenMessageEvent(event: PaymentEvent) {
-        kotlin
-            .runCatching {
-                paymentService.sendPaymentEventMessage(event.paymentId)
-            }.onFailure { e ->
-                logger.error("Payment Event Listener Error : ${e.message}")
-            }
+        logger.info("PaymentEventListener")
+        paymentService.sendPaymentEventMessage(event.paymentId)
     }
 
-    private val logger = LoggerFactory.getLogger(PaymentEventListener::class.java)
+    private val logger = LoggerFactory.getLogger(this::class.java)
 }

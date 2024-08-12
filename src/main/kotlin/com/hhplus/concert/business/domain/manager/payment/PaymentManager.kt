@@ -6,8 +6,6 @@ import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.User
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
-import com.hhplus.concert.common.error.code.ErrorCode
-import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.PaymentStatus
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
@@ -76,7 +74,4 @@ class PaymentManager(
             )
         }
     }
-
-    fun getPayment(paymentId: Long): Payment =
-        paymentRepository.findById(paymentId) ?: throw BusinessException.NotFound(ErrorCode.Payment.NOT_FOUND)
 }
