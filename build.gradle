@@ -36,12 +36,22 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
     implementation("org.springdoc:springdoc-openapi-starter-common:2.1.0")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+    implementation("com.slack.api:slack-api-client:1.38.1")
+    implementation("com.slack.api:slack-api-model:1.38.1")
+    implementation("com.slack.api:slack-api-client-kotlin-extension:1.38.1")
+    implementation("com.slack.api:slack-api-model-kotlin-extension:1.38.1")
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+    testImplementation("com.slack.api:slack-api-model:1.38.1")
+    testImplementation("com.slack.api:slack-api-client:1.38.1")
+    testImplementation("com.slack.api:slack-api-model-kotlin-extension:1.38.1")
+    testImplementation("com.slack.api:slack-api-client-kotlin-extension:1.38.1")
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
