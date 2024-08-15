@@ -68,5 +68,6 @@ sealed interface ErrorCode {
         override val message: String,
     ) : ErrorCode {
         BAD_REQUEST(HttpStatus.BAD_REQUEST, "EVENT001", "잘못된 이벤트 요청입니다."),
+        NOT_FOUND(HttpStatus.NOT_FOUND, "EVENT002", "해당 이벤트를 찾을 수 없습니다."),
     }
 }

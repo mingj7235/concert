@@ -17,6 +17,7 @@ import java.time.LocalDateTime
 class PaymentEventOutBox(
     paymentId: Long,
     eventStatus: EventStatus,
+    publishedAt: LocalDateTime = LocalDateTime.now(),
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,8 @@ class PaymentEventOutBox(
         protected set
 
     @Column(name = "published_at", nullable = false)
-    var publishedAt: LocalDateTime = LocalDateTime.now()
+    var publishedAt: LocalDateTime = publishedAt
+        protected set
 
     fun updateEventStatus(eventStatus: EventStatus) {
         this.eventStatus = eventStatus

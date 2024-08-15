@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 interface PaymentEventOutBoxRepository {
     fun save(paymentEventOutBox: PaymentEventOutBox): PaymentEventOutBox
 
-    fun findByPaymentId(paymentId: Long): PaymentEventOutBox
+    fun findByPaymentId(paymentId: Long): PaymentEventOutBox?
 
     fun findAllFailedEvent(dateTime: LocalDateTime): List<PaymentEventOutBox>
 

@@ -12,7 +12,7 @@ class PaymentEventOutBoxRepositoryImpl(
 ) : PaymentEventOutBoxRepository {
     override fun save(paymentEventOutBox: PaymentEventOutBox): PaymentEventOutBox = eventOutBoxJpaRepository.save(paymentEventOutBox)
 
-    override fun findByPaymentId(paymentId: Long): PaymentEventOutBox = eventOutBoxJpaRepository.findByPaymentId(paymentId)
+    override fun findByPaymentId(paymentId: Long): PaymentEventOutBox? = eventOutBoxJpaRepository.findByPaymentId(paymentId)
 
     override fun findAllFailedEvent(dateTime: LocalDateTime): List<PaymentEventOutBox> =
         eventOutBoxJpaRepository.findAllFailedEvent(dateTime)

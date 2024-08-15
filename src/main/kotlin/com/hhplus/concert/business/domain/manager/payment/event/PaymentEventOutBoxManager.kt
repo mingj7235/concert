@@ -27,14 +27,14 @@ class PaymentEventOutBoxManager(
             ),
         )
 
-    fun findEventByPaymentId(paymentId: Long): PaymentEventOutBox = paymentEventOutBoxRepository.findByPaymentId(paymentId)
+    fun findEventByPaymentId(paymentId: Long): PaymentEventOutBox =
+        paymentEventOutBoxRepository.findByPaymentId(paymentId) ?: throw BusinessException.NotFound(ErrorCode.Event.BAD_REQUEST)
 
     fun updateEventStatus(
         paymentId: Long,
         eventStatus: EventStatus,
     ) {
-        val eventOutbox = paymentEventOutBoxRepository.findByPaymentId(paymentId)
-        eventOutbox.updateEventStatus(eventStatus)
+        paymentEventOutBoxRepository.findByPaymentId(paymentId)?.updateEventStatus(eventStatus)
     }
 
     fun retryFailedPaymentEvent(): List<PaymentEventOutBox> =

@@ -3,8 +3,6 @@ package com.hhplus.concert.business.domain.manager.payment
 import com.hhplus.concert.business.domain.message.MessageAlarmPayload
 import com.hhplus.concert.business.domain.message.MessageClient
 import com.hhplus.concert.business.domain.repository.PaymentRepository
-import com.hhplus.concert.common.error.code.ErrorCode
-import com.hhplus.concert.common.error.exception.BusinessException
 import com.hhplus.concert.common.type.AlarmLevel
 import com.hhplus.concert.common.type.PaymentStatus
 import org.springframework.stereotype.Component
@@ -21,7 +19,7 @@ class PaymentMessageSender(
      * 외부 API 를 통해 Payment Event 메세지를 전송한다.
      */
     fun sendPaymentEventMessage(paymentId: Long) {
-        val payment = paymentRepository.findById(paymentId) ?: throw BusinessException.NotFound(ErrorCode.Payment.NOT_FOUND)
+        val payment = paymentRepository.findById(paymentId) ?: return
 
         messageClient.sendMessage(
             MessageAlarmPayload(

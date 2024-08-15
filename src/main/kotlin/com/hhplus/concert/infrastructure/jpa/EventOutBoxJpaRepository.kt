@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 
 interface EventOutBoxJpaRepository : JpaRepository<PaymentEventOutBox, Long> {
-    fun findByPaymentId(paymentId: Long): PaymentEventOutBox
+    fun findByPaymentId(paymentId: Long): PaymentEventOutBox?
 
     @Query("select peo from PaymentEventOutBox peo where peo.eventStatus = 'INIT' and peo.publishedAt < :dateTime")
     fun findAllFailedEvent(dateTime: LocalDateTime): List<PaymentEventOutBox>
