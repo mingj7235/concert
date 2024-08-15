@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: local
+
   datasource:
     url: jdbc:h2:mem:test;NON_KEYWORDS=USER
     driverClassName: org.h2.Driver
@@ -12,7 +15,14 @@ spring:
         hbm2ddl:
           auto: create-drop
         show_sql: true
+  kafka:
+    bootstrap-servers: localhost:29092
 
 jwt:
   secret: concert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secret
   expiration-days: 1
+
+slack:
+  checkin:
+    webhook:
+      base_url: "https://hooks.slack.com/services/"

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: test
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,6 +17,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  kafka:
+    bootstrap-servers: localhost:29092
 
 jwt:
   secret: concert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secretconcert_jwt_secret
