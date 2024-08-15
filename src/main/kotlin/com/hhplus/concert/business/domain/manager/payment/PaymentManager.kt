@@ -4,6 +4,8 @@ import com.hhplus.concert.business.domain.entity.Payment
 import com.hhplus.concert.business.domain.entity.PaymentHistory
 import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.User
+import com.hhplus.concert.business.domain.manager.payment.event.PaymentEvent
+import com.hhplus.concert.business.domain.manager.payment.event.PaymentEventPublisher
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
 import com.hhplus.concert.common.type.PaymentStatus
