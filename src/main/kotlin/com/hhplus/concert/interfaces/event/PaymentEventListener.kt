@@ -29,17 +29,11 @@ class PaymentEventListener(
 
     /**
      * 커밋 이후 (After commit) 에는 다음과 같은 일을 수행한다.
-     * 1. 해당 outbox 의 상태를 변경한다.
-     * 2. kafka event 를 발행한다.
+     * 1. kafka event 를 발행한다.
      */
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun publishReservationEvent(event: PaymentEvent) {
-        paymentEventOutBoxService.updateEventStatus(
-            paymentId = event.paymentId,
-            eventStatus = EventStatus.PUBLISHED,
-        )
-
         paymentEventOutBoxService.publishPaymentEvent(event)
     }
 
