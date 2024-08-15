@@ -25,6 +25,9 @@ class PaymentEventOutBoxService(
             eventStatus = eventStatus,
         )
 
+    /**
+     * outbox 의 상태를 변경한다.
+     */
     fun updateEventStatus(
         paymentId: Long,
         eventStatus: EventStatus,
@@ -40,5 +43,22 @@ class PaymentEventOutBoxService(
      */
     fun publishPaymentEvent(event: PaymentEvent) {
         paymentEventPublisher.publishPaymentEvent(event)
+    }
+
+    /**
+     * 실패로 간주하는 이벤트를 재시도한다.
+     * 실패 간주 조건 : 5분이 지났음에도 여전히 상태가 INIT 인 Event
+     */
+    fun retryFailedPaymentEvent() {
+        paymentEventOutBoxManager.retryFailedPaymentEvent().forEach {
+            paymentEventPublisher.publishPaymentEvent(PaymentEvent(it.paymentId))
+        }
+    }
+
+    /**
+     * 발행된 후 일주일이 지난 EventOutBox 를 삭제한다.
+     */
+    fun deletePublishedPaymentEvent() {
+        paymentEventOutBoxManager.deletePublishedPaymentEvent()
     }
 }

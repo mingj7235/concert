@@ -22,7 +22,7 @@ class PaymentEventKafkaConsumer(
     }
 
     @Async
-    @KafkaListener(topics = ["payment-event"], groupId = "concert")
+    @KafkaListener(topics = ["payment-event"], groupId = "payment-group")
     fun handleSendMessageKafkaEvent(paymentId: String) {
         logger.info("KafkaEvent received")
         paymentService.sendPaymentEventMessage(paymentId.toLong())
