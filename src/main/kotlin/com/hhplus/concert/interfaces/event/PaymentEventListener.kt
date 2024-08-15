@@ -15,8 +15,6 @@ class PaymentEventListener(
 ) {
     /**
      * 커밋 전 (Before commit) 에 Outbox 를 저장한다.
-     * 1. 커밋 전에 outbox 가 저장 되었으므로, 트랜잭션이 실패했어도 outbox 는 Init 상태로 저장이 된다.
-     * 2. 만일 트랜잭션이 실패한 경우의 outbox 는 batch 를 통해 재시도를 하도록 한다.
      */
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     fun saveEventOutBoxForPaymentCompleted(event: PaymentEvent) {
@@ -29,8 +27,7 @@ class PaymentEventListener(
 
     /**
      * 커밋 이후 (After commit) 에는 다음과 같은 일을 수행한다.
-     * 1. 해당 outbox 의 상태를 변경한다.
-     * 2. kafka event 를 발행한다.
+     * 1. kafka event 를 발행한다.
      */
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
