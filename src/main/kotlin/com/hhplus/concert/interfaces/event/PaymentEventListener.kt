@@ -40,7 +40,7 @@ class PaymentEventListener(
             eventStatus = EventStatus.PUBLISHED,
         )
 
-        TODO("Kafka Event 발행")
+        paymentEventOutBoxService.publishPaymentEvent(event)
     }
 
     private val logger = LoggerFactory.getLogger(this::class.java)

@@ -31,8 +31,8 @@ class PaymentEventOutBox(
     var eventStatus: EventStatus = eventStatus
         protected set
 
-    @Column(name = "published_date_time", nullable = false)
-    var publishedDateTime: LocalDateTime = LocalDateTime.now()
+    @Column(name = "published_at", nullable = false)
+    var publishedAt: LocalDateTime = LocalDateTime.now()
 
     fun updateEventStatus(eventStatus: EventStatus) {
         this.eventStatus = eventStatus
