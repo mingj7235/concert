@@ -35,11 +35,6 @@ class PaymentEventListener(
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun publishReservationEvent(event: PaymentEvent) {
-        paymentEventOutBoxService.updateEventStatus(
-            paymentId = event.paymentId,
-            eventStatus = EventStatus.PUBLISHED,
-        )
-
         paymentEventOutBoxService.publishPaymentEvent(event)
     }
 
