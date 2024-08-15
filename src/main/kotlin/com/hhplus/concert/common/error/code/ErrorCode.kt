@@ -61,4 +61,12 @@ sealed interface ErrorCode {
         NOT_FOUND(HttpStatus.NOT_FOUND, "QUEUE001", "해당 대기열을 찾을 수 없습니다."),
         NOT_ALLOWED(HttpStatus.BAD_REQUEST, "QUEUE002", "해당 대기열은 허용되지 않습니다."),
     }
+
+    enum class Event(
+        override val httpStatus: HttpStatus,
+        override val errorCode: String,
+        override val message: String,
+    ) : ErrorCode {
+        BAD_REQUEST(HttpStatus.BAD_REQUEST, "EVENT001", "잘못된 이벤트 요청입니다."),
+    }
 }
