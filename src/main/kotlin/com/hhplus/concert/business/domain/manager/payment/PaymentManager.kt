@@ -4,9 +4,12 @@ import com.hhplus.concert.business.domain.entity.Payment
 import com.hhplus.concert.business.domain.entity.PaymentHistory
 import com.hhplus.concert.business.domain.entity.Reservation
 import com.hhplus.concert.business.domain.entity.User
+import com.hhplus.concert.business.domain.manager.payment.event.PaymentEvent
+import com.hhplus.concert.business.domain.manager.payment.event.PaymentEventPublisher
 import com.hhplus.concert.business.domain.repository.PaymentHistoryRepository
 import com.hhplus.concert.business.domain.repository.PaymentRepository
 import com.hhplus.concert.common.type.PaymentStatus
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
@@ -14,7 +17,7 @@ import java.time.LocalDateTime
 class PaymentManager(
     private val paymentRepository: PaymentRepository,
     private val paymentHistoryRepository: PaymentHistoryRepository,
-    private val paymentEventPublisher: PaymentEventPublisher,
+    @Qualifier("application") private val paymentEventPublisher: PaymentEventPublisher,
 ) {
     /**
      * 결제를 실행한다.
