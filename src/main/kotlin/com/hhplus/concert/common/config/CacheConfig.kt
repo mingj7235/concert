@@ -1,5 +1,6 @@
 package com.hhplus.concert.common.config
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer
 import org.springframework.cache.annotation.EnableCaching
@@ -17,8 +18,10 @@ class CacheConfig(
     val objectMapper: ObjectMapper,
 ) {
     @Bean
-    fun redisCacheManagerBuilderCustomizer(): RedisCacheManagerBuilderCustomizer =
-        RedisCacheManagerBuilderCustomizer {
+    fun redisCacheManagerBuilderCustomizer(): RedisCacheManagerBuilderCustomizer {
+        val objectMapper = customizeObjectMapperForRedisCache()
+
+        return RedisCacheManagerBuilderCustomizer {
             it
                 .withCacheConfiguration(
                     ONE_MIN_CACHE,
@@ -28,6 +31,7 @@ class CacheConfig(
                     redisCacheConfigurationByTtl(objectMapper, TTL_FIVE_MINUTE),
                 )
         }
+    }
 
     private fun redisCacheConfigurationByTtl(
         objectMapper: ObjectMapper,
@@ -47,6 +51,17 @@ class CacheConfig(
                     GenericJackson2JsonRedisSerializer(objectMapper),
                 ),
             )
+
+    private fun customizeObjectMapperForRedisCache(): ObjectMapper {
+        val copiedMapper = objectMapper.copy()
+        copiedMapper.activateDefaultTyping(
+            objectMapper.polymorphicTypeValidator,
+            // Data Class 를 역직렬화 하기 위해서 지정해야한다.
+            ObjectMapper.DefaultTyping.NON_FINAL_AND_ENUMS,
+            JsonTypeInfo.As.PROPERTY,
+        )
+        return copiedMapper
+    }
 
     companion object {
         const val ONE_MIN_CACHE = "one-min-cache"
