@@ -1,7 +1,10 @@
 package com.hhplus.concert.common.config
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
@@ -52,16 +55,22 @@ class CacheConfig(
                 ),
             )
 
-    private fun customizeObjectMapperForRedisCache(): ObjectMapper {
-        val copiedMapper = objectMapper.copy()
-        copiedMapper.activateDefaultTyping(
-            objectMapper.polymorphicTypeValidator,
-            // Data Class 를 역직렬화 하기 위해서 지정해야한다.
-            ObjectMapper.DefaultTyping.NON_FINAL_AND_ENUMS,
-            JsonTypeInfo.As.PROPERTY,
-        )
-        return copiedMapper
-    }
+    private fun customizeObjectMapperForRedisCache(): ObjectMapper =
+        objectMapper.copy().apply {
+            // Enable default typing for all non-final types
+            activateDefaultTyping(
+                BasicPolymorphicTypeValidator
+                    .builder()
+                    .allowIfBaseType(Any::class.java)
+                    .build(),
+                ObjectMapper.DefaultTyping.EVERYTHING,
+            )
+            // Configure to ignore unknown properties
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            // Register module to handle Kotlin-specific serialization
+            registerModule(KotlinModule.Builder().build())
+            registerModule(JavaTimeModule())
+        }
 
     companion object {
         const val ONE_MIN_CACHE = "one-min-cache"
