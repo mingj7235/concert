@@ -64,6 +64,10 @@ class QueueManager(
         queueRedisRepository.removeExpiredWaitingQueue(System.currentTimeMillis())
     }
 
+    fun removeExpiredProcessingQueue() {
+        queueRedisRepository.removeExpiredProcessingQueue(System.currentTimeMillis())
+    }
+
     fun completeProcessingToken(token: String) {
         queueRedisRepository.removeProcessingToken(token)
     }

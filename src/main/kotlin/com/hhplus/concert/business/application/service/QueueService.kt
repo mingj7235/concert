@@ -58,6 +58,10 @@ class QueueService(
         queueManager.removeExpiredWaitingQueue()
     }
 
+    fun removeExpiredProcessingQueue() {
+        queueManager.removeExpiredProcessingQueue()
+    }
+
     companion object {
         const val NO_REMAINING_WAIT = 0L
     }

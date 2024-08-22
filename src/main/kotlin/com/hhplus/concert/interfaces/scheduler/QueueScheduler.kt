@@ -22,4 +22,10 @@ class QueueScheduler(
         logger.info("Cancel Expired Waiting Queue Executed")
         queueService.cancelExpiredWaitingQueue()
     }
+
+    @Scheduled(fixedRate = 60000)
+    fun removeExpiredProcessingQueue() {
+        logger.info("Remove Expired Processing Queue Executed")
+        queueService.removeExpiredProcessingQueue()
+    }
 }

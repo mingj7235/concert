@@ -20,7 +20,9 @@ class QueueRedisRepository(
 
     fun findWaitingQueueTokenByUserId(userId: String): String? {
         val pattern = "*:$userId"
-        return redisTemplate.opsForZSet().rangeByScore(WAITING_QUEUE_KEY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY)
+        return redisTemplate
+            .opsForZSet()
+            .rangeByScore(WAITING_QUEUE_KEY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY)
             ?.find { it.endsWith(pattern) }
             ?.split(":")
             ?.firstOrNull()
@@ -75,7 +77,9 @@ class QueueRedisRepository(
      * WAITING 상태의 대기열 중 PROCESSING 상태로 변경 할 수 있는 수만큼의 WAITING 상태의 대기열을 가지고 온다.
      */
     fun getWaitingQueueNeedToUpdateToProcessing(needToUpdateCount: Int): List<Pair<String, String>> =
-        redisTemplate.opsForZSet().range(WAITING_QUEUE_KEY, 0, needToUpdateCount.toLong() - 1)
+        redisTemplate
+            .opsForZSet()
+            .range(WAITING_QUEUE_KEY, 0, needToUpdateCount.toLong() - 1)
             ?.map {
                 val (token, userId) = it.split(":")
                 token to userId
@@ -86,6 +90,10 @@ class QueueRedisRepository(
      */
     fun removeExpiredWaitingQueue(currentTime: Long) {
         redisTemplate.opsForZSet().removeRangeByScore(WAITING_QUEUE_KEY, Double.NEGATIVE_INFINITY, currentTime.toDouble())
+    }
+
+    fun removeExpiredProcessingQueue(currentTime: Long) {
+        redisTemplate.opsForZSet().removeRangeByScore(PROCESSING_QUEUE_KEY, Double.NEGATIVE_INFINITY, currentTime.toDouble())
     }
 
     /**
