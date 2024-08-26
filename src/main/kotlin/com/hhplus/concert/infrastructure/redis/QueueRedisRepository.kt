@@ -12,19 +12,18 @@ class QueueRedisRepository(
      */
     fun addToWaitingQueue(
         token: String,
-        userId: String,
         expirationTime: Long,
     ) {
-        redisTemplate.opsForZSet().add(WAITING_QUEUE_KEY, "$token:$userId", expirationTime.toDouble())
+        redisTemplate.opsForZSet().add(WAITING_QUEUE_KEY, token, expirationTime.toDouble())
     }
 
     fun findWaitingQueueTokenByUserId(userId: String): String? {
-        val pattern = "*:$userId"
+        val pattern = "*-$userId"
         return redisTemplate
             .opsForZSet()
             .rangeByScore(WAITING_QUEUE_KEY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY)
             ?.find { it.endsWith(pattern) }
-            ?.split(":")
+            ?.split("-")
             ?.firstOrNull()
     }
 
@@ -32,7 +31,7 @@ class QueueRedisRepository(
         token: String,
         userId: String,
     ) {
-        redisTemplate.opsForZSet().remove(WAITING_QUEUE_KEY, "$token:$userId")
+        redisTemplate.opsForZSet().remove(WAITING_QUEUE_KEY, "$token-$userId")
     }
 
     /**
@@ -40,18 +39,17 @@ class QueueRedisRepository(
      */
     fun updateToProcessingQueue(
         token: String,
-        userId: String,
         expirationTime: Long,
     ) {
-        redisTemplate.opsForZSet().remove(WAITING_QUEUE_KEY, "$token:$userId")
-        redisTemplate.opsForZSet().add(PROCESSING_QUEUE_KEY, "$token:$userId", expirationTime.toDouble())
+        redisTemplate.opsForZSet().remove(WAITING_QUEUE_KEY, token)
+        redisTemplate.opsForZSet().add(PROCESSING_QUEUE_KEY, token, expirationTime.toDouble())
     }
 
     /**
      * 조회한 Token 의 대기열이 PROCESSING 상태인지 확인한다.
      */
     fun isProcessingQueue(token: String): Boolean {
-        val score = redisTemplate.opsForZSet().score(PROCESSING_QUEUE_KEY, "$token:*")
+        val score = redisTemplate.opsForZSet().score(PROCESSING_QUEUE_KEY, token)
         return score != null
     }
 
@@ -61,7 +59,7 @@ class QueueRedisRepository(
     fun getWaitingQueuePosition(
         token: String,
         userId: String,
-    ): Long = redisTemplate.opsForZSet().rank(WAITING_QUEUE_KEY, "$token:$userId") ?: -1
+    ): Long = redisTemplate.opsForZSet().rank(WAITING_QUEUE_KEY, token) ?: -1
 
     /**
      * 현재 WAITING 상태의 대기열이 총 몇개인지 확인한다.
@@ -76,14 +74,12 @@ class QueueRedisRepository(
     /**
      * WAITING 상태의 대기열 중 PROCESSING 상태로 변경 할 수 있는 수만큼의 WAITING 상태의 대기열을 가지고 온다.
      */
-    fun getWaitingQueueNeedToUpdateToProcessing(needToUpdateCount: Int): List<Pair<String, String>> =
+    fun getWaitingQueueNeedToUpdateToProcessing(needToUpdateCount: Int): Set<String> =
         redisTemplate
             .opsForZSet()
             .range(WAITING_QUEUE_KEY, 0, needToUpdateCount.toLong() - 1)
-            ?.map {
-                val (token, userId) = it.split(":")
-                token to userId
-            } ?: emptyList()
+            ?.toSet()
+            .orEmpty()
 
     /**
      * 현재 WAITING 상태의 대기열 중, 만료된 (ExpirationTime 이 현재시간보다 이전인) 대기열을 삭제한다.
@@ -100,8 +96,7 @@ class QueueRedisRepository(
      * 취소되거나 완료된 상태의 PROCESSING 대기열을 삭제한다.
      */
     fun removeProcessingToken(token: String) {
-        val pattern = "$token:*"
-        redisTemplate.opsForSet().members(PROCESSING_QUEUE_KEY)?.find { it.startsWith(pattern) }?.let {
+        redisTemplate.opsForSet().members(PROCESSING_QUEUE_KEY)?.find { it.startsWith(token) }?.let {
             redisTemplate.opsForSet().remove(PROCESSING_QUEUE_KEY, it)
         }
     }
