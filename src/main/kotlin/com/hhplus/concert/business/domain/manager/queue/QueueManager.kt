@@ -14,13 +14,8 @@ class QueueManager(
     fun enqueueAndIssueToken(userId: Long): String {
         val token = jwtUtil.generateToken(userId)
         val score = System.currentTimeMillis()
-        val existingToken = queueRedisRepository.findWaitingQueueTokenByUserId(userId.toString())
 
-        existingToken?.let {
-            queueRedisRepository.removeFromWaitingQueue(it, userId.toString())
-        }
-
-        queueRedisRepository.addToWaitingQueue(token, userId.toString(), score)
+        queueRedisRepository.addToWaitingQueue(token, score)
         return token
     }
 
@@ -46,10 +41,9 @@ class QueueManager(
         val tokensNeedToUpdateToProcessing =
             queueRedisRepository.getWaitingQueueNeedToUpdateToProcessing(availableProcessingRoom.toInt())
 
-        tokensNeedToUpdateToProcessing.forEach { (token, userId) ->
+        tokensNeedToUpdateToProcessing.forEach { token ->
             queueRedisRepository.updateToProcessingQueue(
                 token = token,
-                userId = userId,
                 expirationTime = System.currentTimeMillis() + TOKEN_EXPIRATION_TIME,
             )
         }
